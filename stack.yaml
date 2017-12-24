@@ -1,0 +1,14 @@
+resolver: lts-10.0
+packages:
+  - '.'
+docker:
+  enable: true
+
+image:
+  containers:
+    -
+      base: "fpco/ubuntu-with-libgmp:14.04"
+      add:
+        config/: /config/
+      entrypoints:
+        - example-servant-persistent

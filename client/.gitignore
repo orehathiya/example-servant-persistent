@@ -1,0 +1,12 @@
+node_modules/
+bower_components/
+output/
+static/app.js
+static/dist/
+.psci_modules
+npm-debug.log
+**DS_Store
+.psc-package/
+src/Model/
+src/Database/
+src/ServerAPI.purs

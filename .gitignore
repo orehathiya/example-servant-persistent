@@ -1,0 +1,13 @@
+/.stack-work/
+/sqlite.db
+/sqlite.db-shm
+/sqlite.db-wal
+dist
+doc.md
+.idea
+.vagrant
+.dir-locals.el
+*.sqlite3*
+*.keter
+TAGS
+*.cabal

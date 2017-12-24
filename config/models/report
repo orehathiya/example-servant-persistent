@@ -1,0 +1,5 @@
+Report json
+  imp Int
+  click Int
+  ctr Int
+  deriving Eq Read Show Generic

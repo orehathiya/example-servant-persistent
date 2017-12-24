@@ -1,0 +1,2 @@
+port: "_env:PORT:3000"
+database: "_env:DATABASE:example-servant-persistent.sqlite3"

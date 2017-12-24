@@ -1,0 +1,5 @@
+User json
+  name Text
+  age  Int
+  UniqueName name
+  deriving Eq Read Show Generic

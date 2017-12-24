@@ -1,0 +1,16 @@
+{
+    "name": "pux-starter-app",
+    "set": "psc-0.11.7",
+    "source": "https://github.com/purescript/package-sets.git",
+    "depends": [
+        "prelude",
+        "pux",
+        "css",
+        "aff",
+        "affjax",
+        "argonaut",
+        "servant-support",
+        "profunctor-lenses",
+        "psci-support"
+    ]
+}

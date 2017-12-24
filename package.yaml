@@ -1,0 +1,72 @@
+name: example-servant-persistent
+version: '0.1.0.0'
+synopsis: example with persistent and servant
+description: Simple example to illustrate how to use persistent and servant in combination.
+category: Web
+author:
+  - orehathiya
+maintainer:
+  - merrynewyear6593@gmail.com
+license: BSD3
+source-dirs:
+  - lib
+dependencies:
+  - base >=4.8 && <5
+  - aeson
+  - basement
+  - bytestring
+  - http-types
+  - lens
+  - monad-logger
+  - persistent
+  - persistent-template
+  - persistent-sqlite
+  - servant
+  - servant-docs
+  - servant-server
+  - string-conversions
+  - text
+  - transformers
+  - wai
+  - warp
+  - yaml
+executables:
+  example-servant-persistent-doc:
+    main: Doc.hs
+    source-dirs:
+      - doc
+    ghc-options: -Wall
+    dependencies:
+      - aeson-pretty
+  example-servant-persistent:
+    main: Main.hs
+    source-dirs:
+      - src
+    ghc-options: -Wall
+  psGenerator:
+    main: PSGenerator.hs
+    source-dirs:
+      - gen
+    ghc-options: -Wall
+    dependencies:
+      - containers
+      - filepath
+      - http-api-data
+      - mainland-pretty
+      - purescript-bridge
+      - servant-foreign
+      - servant-purescript
+      - servant-subscriber
+tests:
+  spec:
+    main: Spec.hs
+    source-dirs:
+      - test
+    ghc-options: -Wall
+    dependencies:
+      - hspec
+      - exceptions
+      - servant-client
+      - http-client
+      - http-media
+      - mockery
