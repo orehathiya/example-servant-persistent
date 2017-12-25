@@ -8,7 +8,7 @@
     "purescript-pux"
   ],
   "scripts": {
-    "postinstall": "psc-package build",
+    "postinstall": "psc-package update",
     "build": "pulp browserify --to static/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
