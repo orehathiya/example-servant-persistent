@@ -12,15 +12,21 @@
 
 module Model.Report where
 
+import Database.Persist.Quasi
 import Database.Persist.Sql
 import Database.Persist.TH
-import Database.Persist.Quasi
 import GHC.Generics
 import Servant.Docs
 
-mkPersist sqlSettings {
-  mpsPrefixFields = False,
-  mpsEntityJSON = Just EntityJSON { entityToJSON = 'keyValueEntityToJSON, entityFromJSON = 'keyValueEntityFromJSON}
+mkPersist
+  sqlSettings
+  { mpsPrefixFields = False
+  , mpsEntityJSON =
+      Just
+        EntityJSON
+        { entityToJSON = 'keyValueEntityToJSON
+        , entityFromJSON = 'keyValueEntityFromJSON
+        }
   }
   $(persistFileWith lowerCaseSettings "config/models/report")
 
