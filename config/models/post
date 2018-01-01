@@ -1,0 +1,6 @@
+Post json
+  title Text
+  body Text
+  created UTCTime default=CURRENT_TIME
+  updated UTCTime default=CURRENT_TIME
+  deriving Eq Read Show Generic

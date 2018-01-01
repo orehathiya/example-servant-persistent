@@ -13,9 +13,12 @@ import Api
 import Model
 import Server.Report
 import Server.User
+import Server.Post
 
 server :: ConnectionPool -> Server Api
-server pool = (usersServer pool :<|> reportsServer pool) :<|> serveDirectoryFileServer "client/static"
+server pool =
+  (usersServer pool :<|> reportsServer pool :<|> postsServer pool) :<|>
+  serveDirectoryFileServer "client/static"
 
 app :: ConnectionPool -> Application
 app pool = serve api $ server pool

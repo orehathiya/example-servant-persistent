@@ -26,6 +26,7 @@ dependencies:
   - servant-server
   - string-conversions
   - text
+  - time
   - transformers
   - wai
   - warp

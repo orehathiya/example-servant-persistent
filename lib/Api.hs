@@ -10,9 +10,10 @@ import Servant.API
 
 import Api.Report
 import Api.User
+import Api.Post
 
 type Api = AppApi :<|> Raw
-type AppApi = UsersApi :<|> ReportsApi
+type AppApi = UsersApi :<|> ReportsApi :<|> PostsApi
 
 api :: Proxy Api
 api = Proxy
