@@ -1,30 +1,35 @@
 module App.View.Layout where
 
+import App.Events (Event(..))
+import App.Routes (Route(NotFound, Home, Posts, Post))
+import App.State (State(..))
 import App.View.Homepage as Homepage
 import App.View.NotFound as NotFound
-import App.Routes (Route(NotFound, Home))
-import App.State (State(..))
-import App.Events (Event)
-import CSS (CSS, fromString, (?), fontSize, display, inlineBlock, marginTop, marginRight, marginLeft, px, value, key, color, backgroundColor, padding, borderRadius)
-import CSS.Border (border, solid)
-import CSS.TextAlign (center, textAlign)
+import App.View.Post as Post
+import CSS (CSS, backgroundColor, borderRadius, color, display, fontSize, fromString, inlineBlock, key, marginTop, padding, px, value, (?))
 import CSS.Text (textDecoration, noneTextDecoration, letterSpacing)
 import CSS.Text.Transform (textTransform, uppercase)
+import CSS.TextAlign (center, textAlign)
 import Color (rgb)
 import Control.Bind (discard)
 import Data.Function (($), (#))
 import Pux.DOM.HTML (HTML, style)
-import Text.Smolder.HTML (div)
-import Text.Smolder.HTML.Attributes (className)
-import Text.Smolder.Markup ((!))
+import Pux.DOM.Events (onClick)
+import Text.Smolder.HTML (a, div, li)
+import Text.Smolder.HTML.Attributes (className, href)
+import Text.Smolder.Markup (text, (!), (#!))
 
 view :: State -> HTML Event
 view (State st) =
   div ! className "app" $ do
     style css
+    li $ a ! href "/#/users" #! onClick (Navigate "/#/users") $ text "User"
+    li $ a ! href "/#/posts" #! onClick (Navigate "/#/posts") $ text "Post"
 
     case st.route of
       (Home) -> Homepage.view (State st)
+      (Posts) -> Post.view (State st)
+      (Post postid) -> Post.view (State st)
       (NotFound url) -> NotFound.view (State st)
 
 css :: CSS
@@ -50,21 +55,3 @@ css = do
     borderRadius (2.0 #px) (2.0 #px) (2.0 #px) (2.0 #px)
     padding (6.0 #px) (6.0 #px) (6.0 #px) (6.0 #px)
     textDecoration noneTextDecoration
-
-  fromString ".guide" ? do
-    border solid (2.0 #px) green
-    color green
-    marginRight (10.0 #px)
-
-  fromString ".guide:hover" ? do
-    backgroundColor green
-    color white
-
-  fromString ".github" ? do
-    border solid (2.0 #px) blue
-    color blue
-    marginLeft (10.0 #px)
-
-  fromString ".github:hover" ? do
-    backgroundColor blue
-    color white

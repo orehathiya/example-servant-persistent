@@ -10,16 +10,13 @@ import Model.User (User(..))
 import Database.Persist.Class.PersistEntity (Entity(..))
 import Pux.DOM.Events (onClick)
 import Pux.DOM.HTML (HTML)
-import Text.Smolder.HTML (a, div, h1, button)
-import Text.Smolder.HTML.Attributes (href, className)
-import Text.Smolder.Markup ((!), (#!), text)
+import Text.Smolder.HTML (button, div, h1)
+import Text.Smolder.Markup (text, (#!))
 
 view :: State -> HTML Event
 view (State st) =
   div do
-    h1 $ text "Pux"
-    a ! className "guide" ! href "https://www.purescript-pux.org/" $ text "Guide"
-    a ! className "github" ! href "https://github.com/alexmingoia/purescript-pux/" $ text "GitHub"
+    h1 $ text "Homepage"
     button #! onClick (const RequestUser) $ text "Fetch user"
     case st.user of
       Just (Entity entity) -> do
