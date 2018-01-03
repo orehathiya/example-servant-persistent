@@ -19,13 +19,13 @@ import Data.Either (Either(..))
 import Data.Foreign (toForeign)
 import Data.Maybe (Maybe(..))
 import Database.Persist.Class.PersistEntity (Entity, Key(..))
-import Model.Post (Post)
+import Model.Post (Post(..))
 import Model.User (User)
 import Network.HTTP.Affjax (AJAX)
 import Prelude (bind, discard, map, pure, ($), (<$>), (=<<))
 import Prim (Array, String)
-import Pux (EffModel, noEffects)
-import Pux.DOM.Events (DOMEvent)
+import Pux (EffModel, noEffects, onlyEffects)
+import Pux.DOM.Events (DOMEvent, targetValue)
 import Servant.PureScript.Affjax (AjaxError)
 import Signal.Channel (CHANNEL)
 
@@ -35,6 +35,10 @@ data Event = PageView Route
            | ReceivePost (Entity Post)
            | ReceiveUser (Entity User)
            | RequestUser
+           | PostSubmit
+           | PostSubmited (Maybe (Key Post))
+           | TitleChange DOMEvent
+           | BodyChange DOMEvent
            | ReportError AjaxError
 
 foldp :: forall fx. Event -> State -> EffModel State Event (ajax :: AJAX, dom:: DOM, history :: HISTORY | fx)
@@ -86,6 +90,16 @@ foldp (RequestUser) state = runEffectActions state [ReceiveUser <$> getUserGetBy
 foldp (ReportError err) (State st) =
   noEffects $ State st {
     lastError = Just err
+  }
+foldp (PostSubmited _) state = onlyEffects state [pure $ Just $ PageView RPosts]
+foldp (PostSubmit) (State st) = runEffectActions (State st) [PostSubmited <$> postPosts (Post {title: st.title, body: st.body})]
+foldp (TitleChange ev) (State st) =
+  noEffects $ State st {
+    title = targetValue ev
+  }
+foldp (BodyChange ev) (State st) =
+  noEffects $ State st {
+    body = targetValue ev
   }
 
 type APIEffect eff = ReaderT MySettings (ExceptT AjaxError (Aff ( ajax :: AJAX, channel :: CHANNEL, exception :: EXCEPTION | eff)))
