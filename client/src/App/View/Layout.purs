@@ -1,10 +1,11 @@
 module App.View.Layout where
 
 import App.Events (Event(..))
-import App.Routes (Route(NotFound, Home, Posts, Post))
+import App.Routes (Route(..))
 import App.State (State(..))
 import App.View.Homepage as Homepage
 import App.View.NotFound as NotFound
+import App.View.Posts as Posts
 import App.View.Post as Post
 import CSS (CSS, backgroundColor, borderRadius, color, display, fontSize, fromString, inlineBlock, key, marginTop, padding, px, value, (?))
 import CSS.Text (textDecoration, noneTextDecoration, letterSpacing)
@@ -28,8 +29,8 @@ view (State st) =
 
     case st.route of
       (Home) -> Homepage.view (State st)
-      (Posts) -> Post.view (State st)
-      (Post postid) -> Post.view (State st)
+      (RPosts) -> Posts.view (State st)
+      (RPost postid) -> Post.view (State st)
       (NotFound url) -> NotFound.view (State st)
 
 css :: CSS

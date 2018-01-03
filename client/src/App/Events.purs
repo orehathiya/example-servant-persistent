@@ -2,7 +2,7 @@ module App.Events where
 
 import ServerAPI
 
-import App.Routes (Route, match)
+import App.Routes (Route(..), match)
 import App.State (State(..), MySettings)
 import Control.Monad.Aff (Aff)
 import Control.Monad.Eff.Class (liftEff)
@@ -18,10 +18,12 @@ import DOM.HTML.Window (history)
 import Data.Either (Either(..))
 import Data.Foreign (toForeign)
 import Data.Maybe (Maybe(..))
-import Database.Persist.Class.PersistEntity (Entity(..))
+import Database.Persist.Class.PersistEntity (Entity, Key(..))
+import Model.Post (Post)
 import Model.User (User)
 import Network.HTTP.Affjax (AJAX)
 import Prelude (bind, discard, map, pure, ($), (<$>), (=<<))
+import Prim (Array, String)
 import Pux (EffModel, noEffects)
 import Pux.DOM.Events (DOMEvent)
 import Servant.PureScript.Affjax (AjaxError)
@@ -29,12 +31,31 @@ import Signal.Channel (CHANNEL)
 
 data Event = PageView Route
            | Navigate String DOMEvent
+           | ReceivePosts (Array (Entity Post))
+           | ReceivePost (Entity Post)
            | ReceiveUser (Entity User)
            | RequestUser
            | ReportError AjaxError
 
 foldp :: forall fx. Event -> State -> EffModel State Event (ajax :: AJAX, dom:: DOM, history :: HISTORY | fx)
-foldp (PageView route) (State st) = noEffects $ State st { route = route, loaded = true }
+foldp (PageView route) (State st) =
+  case route of
+    RPosts -> runEffectActions
+             (State st {
+               route = route
+             , loaded = true
+             })
+             [ReceivePosts <$> getPosts]
+    RPost postid -> runEffectActions
+             (State st {
+               route = route
+             , loaded = true
+             })
+             [ReceivePost <$> getPostsByPostid (Key postid)]
+    otherwise -> noEffects $ State st {
+      route = route
+    , loaded = true
+    }
 foldp (Navigate url ev) (State st) =
   { state: State st
   , effects: [
@@ -46,9 +67,19 @@ foldp (Navigate url ev) (State st) =
     ]
 
   }
-foldp (ReceiveUser (Entity user)) (State st) =
+foldp (ReceivePosts posts) (State st) =
   noEffects $ State st {
-    user = Just (Entity user)
+    posts = posts
+  , status = "Posts"
+  }
+foldp (ReceivePost post) (State st) =
+  noEffects $ State st {
+    post = Just post
+  , status = "Post"
+  }
+foldp (ReceiveUser user) (State st) =
+  noEffects $ State st {
+    user = Just user
   , status = "User"
   }
 foldp (RequestUser) state = runEffectActions state [ReceiveUser <$> getUserGetByName "Alice"]
