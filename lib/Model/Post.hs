@@ -12,14 +12,12 @@
 
 module Model.Post where
 
-import Data.Time.Clock
 import Data.Text
 import Database.Persist.Quasi
 import Database.Persist.Sql
 import Database.Persist.TH
 import GHC.Generics
 import Servant.Docs
-import Data.Time.Calendar
 
 mkPersist
   sqlSettings
@@ -36,48 +34,15 @@ mkPersist
 instance ToSample (Entity Post) where
   toSamples _ =
     samples
-      [ Entity
-          (PostKey 1)
-          (Post
-             "title1"
-             "body1"
-             (UTCTime (ModifiedJulianDay 0) (secondsToDiffTime 0))
-             (UTCTime (ModifiedJulianDay 0) (secondsToDiffTime 0)))
-      , Entity
-          (PostKey 2)
-          (Post
-             "title2"
-             "body2"
-             (UTCTime (ModifiedJulianDay 0) (secondsToDiffTime 0))
-             (UTCTime (ModifiedJulianDay 0) (secondsToDiffTime 0)))
-      , Entity
-          (PostKey 3)
-          (Post
-             "title3"
-             "body3"
-             (UTCTime (ModifiedJulianDay 0) (secondsToDiffTime 0))
-             (UTCTime (ModifiedJulianDay 0) (secondsToDiffTime 0)))
+      [ Entity (PostKey 1) (Post "title1" "body1")
+      , Entity (PostKey 2) (Post "title2" "body2")
+      , Entity (PostKey 3) (Post "title3" "body3")
       ]
 
 instance ToSample Post where
   toSamples _ =
     samples
-      [ Post
-          "title1"
-          "body1"
-          (UTCTime (ModifiedJulianDay 0) (secondsToDiffTime 0))
-          (UTCTime (ModifiedJulianDay 0) (secondsToDiffTime 0))
-      , Post
-          "title2"
-          "body2"
-          (UTCTime (ModifiedJulianDay 0) (secondsToDiffTime 0))
-          (UTCTime (ModifiedJulianDay 0) (secondsToDiffTime 0))
-      , Post
-          "title3"
-          "body3"
-          (UTCTime (ModifiedJulianDay 0) (secondsToDiffTime 0))
-          (UTCTime (ModifiedJulianDay 0) (secondsToDiffTime 0))
-      ]
+      [Post "title1" "body1", Post "title2" "body2", Post "title3" "body3"]
 
 instance ToSample PostId where
   toSamples _ = singleSample (PostKey 1)

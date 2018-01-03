@@ -8,8 +8,6 @@ module AppSpec where
 import Data.Text
 import Data.Maybe
 import Database.Persist
-import Data.Time.Calendar
-import Data.Time.Clock
 import Network.HTTP.Client hiding (port)
 import Network.HTTP.Media.MediaType
 import Network.HTTP.Types.Status
@@ -71,12 +69,7 @@ spec =
         try port (userAdd a) `shouldReturn` Right Nothing
     describe "/posts" $
       it "allows to add a post" $ \port -> do
-        let post =
-              Post
-                "title1"
-                "body1"
-                (UTCTime (ModifiedJulianDay 0) (secondsToDiffTime 0))
-                (UTCTime (ModifiedJulianDay 0) (secondsToDiffTime 0))
+        let post = Post "title1" "body1"
         res <- try port $ postAdd post
         let postId :: MP.PostId =
               case res of

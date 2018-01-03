@@ -1,4 +1,3 @@
-{-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE TypeFamilies #-}
@@ -17,8 +16,6 @@
 module Main where
 
 import Data.Proxy
-import Data.Time.Clock
-import Data.Time.Calendar
 import Database.Persist.Types
 import GHC.Generics
 import Language.PureScript.Bridge
@@ -60,28 +57,10 @@ instance Generic (Key a) where
   from = from
   to = to
 
-deriving instance Generic UTCTime
-newtype MyDay =
-    ModifiedJulianDay {
-      toModifiedJulianDay :: Int
-    } deriving (Generic)
-instance Generic Day where
-  type Rep Day = Rep MyDay
-  from = from
-  to = to
-newtype MyDiffTime = MkDiffTime Int deriving (Generic)
-instance Generic DiffTime where
-  type Rep DiffTime = Rep MyDiffTime
-  from = from
-  to = to
-
 myTypes :: [SumType 'Haskell]
 myTypes =
   [ mkSumType (Proxy :: Proxy (Entity A))
   , mkSumType (Proxy :: Proxy (Key A))
-  , mkSumType (Proxy :: Proxy UTCTime)
-  , mkSumType (Proxy :: Proxy Day)
-  , mkSumType (Proxy :: Proxy DiffTime)
   , mkSumType (Proxy :: Proxy User)
   , mkSumType (Proxy :: Proxy Report)
   , mkSumType (Proxy :: Proxy Post)
