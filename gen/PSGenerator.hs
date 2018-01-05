@@ -20,6 +20,7 @@ import Database.Persist.Types
 import GHC.Generics
 import Language.PureScript.Bridge
 import Language.PureScript.Bridge.TypeParameters
+import Language.PureScript.Bridge.PSTypes (psString)
 import Servant.PureScript
 
 import Api
@@ -27,8 +28,11 @@ import Model.Report
 import Model.User
 import Model.Post
 
+utcTimeBridge :: BridgePart
+utcTimeBridge = typeName ^== "UTCTime" >> return psString
+
 myBridge :: BridgePart
-myBridge = defaultBridge
+myBridge = defaultBridge <|> utcTimeBridge
 
 data MyBridge
 

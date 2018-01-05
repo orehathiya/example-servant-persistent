@@ -1,4 +1,5 @@
 Post json
   title Text
   body Text
+  created UTCTime Maybe
   deriving Eq Read Show Generic

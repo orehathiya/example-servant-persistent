@@ -25,8 +25,7 @@ main = do
 
   -- | Map a signal of URL changes to PageView actions.
   let routeSignal = urlSignal ~> \r -> PageView (match r)
-  let settings =  defaultSettings $ SPParams_ {baseURL : "http://localhost:3000/"}
-
+  let settings = defaultSettings $ SPParams_ {baseURL : "http://localhost:3000/"}
   -- | Start the app.
   app <- start
     { initialState: initialState settings

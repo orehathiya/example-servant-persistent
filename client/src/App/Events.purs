@@ -17,7 +17,7 @@ import DOM.HTML.Types (HISTORY)
 import DOM.HTML.Window (history)
 import Data.Either (Either(..))
 import Data.Foreign (toForeign)
-import Data.Maybe (Maybe(..))
+import Data.Maybe (Maybe(Just, Nothing))
 import Database.Persist.Class.PersistEntity (Entity, Key(..))
 import Model.Post (Post(..))
 import Model.User (User)
@@ -92,7 +92,11 @@ foldp (ReportError err) (State st) =
     lastError = Just err
   }
 foldp (PostSubmited _) state = onlyEffects state [pure $ Just $ PageView RPosts]
-foldp (PostSubmit) (State st) = runEffectActions (State st) [PostSubmited <$> postPosts (Post {title: st.title, body: st.body})]
+foldp (PostSubmit) (State st) =
+  runEffectActions
+  (State st)
+  [PostSubmited <$> postPosts (Post {title: st.title, body: st.body, created: Nothing})]
+
 foldp (TitleChange ev) (State st) =
   noEffects $ State st {
     title = targetValue ev

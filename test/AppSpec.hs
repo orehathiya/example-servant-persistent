@@ -69,7 +69,7 @@ spec =
         try port (userAdd a) `shouldReturn` Right Nothing
     describe "/posts" $
       it "allows to add a post" $ \port -> do
-        let post = Post "title1" "body1"
+        let post = Post "title1" "body1" Nothing
         res <- try port $ postAdd post
         let postId :: MP.PostId =
               case res of

@@ -3,6 +3,7 @@
 
 module Model where
 
+import Data.Time.Clock
 import Data.Text hiding (concat)
 import Database.Persist.TH
 import Database.Persist.Quasi
