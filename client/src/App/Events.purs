@@ -2,10 +2,10 @@ module App.Events where
 
 import ServerAPI
 
+import App.Config (MySettings)
 import App.Events.Post (Event(..), State(..), foldp) as EPost
 import App.Routes (Route(..), match)
 import App.State (State(..))
-import App.Config (MySettings)
 import Control.Monad.Aff (Aff)
 import Control.Monad.Eff.Class (liftEff)
 import Control.Monad.Eff.Exception (EXCEPTION)
@@ -25,48 +25,44 @@ import Model.User (User)
 import Network.HTTP.Affjax (AJAX)
 import Prelude (bind, discard, map, pure, ($), (#), (<$>), (=<<))
 import Prim (Array, String)
-import Pux (EffModel, mapEffects, mapState, noEffects)
+import Pux (EffModel, mapEffects, mapState, noEffects, onlyEffects)
 import Pux.DOM.Events (DOMEvent)
 import Servant.PureScript.Affjax (AjaxError)
 import Signal.Channel (CHANNEL)
 
 data Event = PageView Route
            | Navigate String DOMEvent
-           | ChildEvent EPost.Event
+           | ChildPostEvent EPost.Event
            | ReceiveUser (Entity User)
            | RequestUser
            | ReportError AjaxError
 
 foldp :: forall fx. Event -> State -> EffModel State Event (ajax :: AJAX, dom:: DOM, history :: HISTORY | fx)
+foldp (PageView RPosts) (State st) =
+  runEffectActions
+  (State st {route = RPosts})
+  [ChildPostEvent <$> (EPost.ReceivePosts <$> getPosts)]
+foldp (PageView (RPost postid)) (State st) =
+  runEffectActions
+  (State st {route = RPost postid})
+  [ChildPostEvent <$> EPost.ReceivePost <$> getPostsByPostid (Key postid)]
 foldp (PageView route) (State st) =
-  case route of
-    RPosts -> runEffectActions
-             (State st {route = route})
-             [ChildEvent <$> (EPost.ReceivePosts <$> getPosts)]
-    RPost postid -> runEffectActions
-             (State st {route = route})
-             [ChildEvent <$> EPost.ReceivePost <$> getPostsByPostid (Key postid)]
-    otherwise -> noEffects $ State st {route = route}
+  noEffects $ State st {route = route}
 foldp (Navigate url ev) state =
-  { state: state
-  , effects: [
+  onlyEffects state [
     liftEff do
       preventDefault ev
       h <- history =<< window
       pushState (toForeign {}) (DocumentTitle "") (URL url) h
       pure $ Just $ PageView (match url)
     ]
-
-  }
-foldp (ChildEvent e) (State st) =
+foldp (ChildPostEvent e) (State st) =
   let EPost.State pc = st.postChild in
   EPost.foldp e (EPost.State pc {settings = st.settings})
     # mapEffects (\ev -> event ev)
     # mapState \sb -> State st { postChild = sb }
-  where event ev = case ev of
-          EPost.PostSubmited _ -> PageView RPosts
-          _ -> ChildEvent ev
-
+  where event (EPost.PostSubmited _) = PageView RPosts
+        event ev = ChildPostEvent ev
 foldp (ReceiveUser user) (State st) =
   noEffects $ State st {user = Just user}
 foldp (RequestUser) state = runEffectActions state [ReceiveUser <$> getUserGetByName "Alice"]

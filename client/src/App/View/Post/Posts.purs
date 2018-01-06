@@ -27,7 +27,7 @@ postView (Entity {key: (Key postid), value: Post post}) =
 
 postForm :: State -> HTML AEvent.Event
 postForm (State st) =
-  form ! name "post" ! action "javascript:void(0);" #! onSubmit (const $ AEvent.ChildEvent PostSubmit) $ do
-    input ! type' "text" ! value st.title #! onChange \e -> (AEvent.ChildEvent $ TitleChange e)
-    input ! type' "text" ! value st.body #! onChange \e -> (AEvent.ChildEvent $ BodyChange e)
+  form ! name "post" ! action "javascript:void(0);" #! onSubmit (const $ AEvent.ChildPostEvent PostSubmit) $ do
+    input ! type' "text" ! value st.title #! onChange \e -> (AEvent.ChildPostEvent $ TitleChange e)
+    input ! type' "text" ! value st.body #! onChange \e -> (AEvent.ChildPostEvent $ BodyChange e)
     button ! type' "submit" $ text "submit"
