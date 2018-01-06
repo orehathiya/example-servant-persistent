@@ -29,6 +29,7 @@ init settings url =
      , title: ""
      , body: ""
      , settings: settings
+     , lastError: Nothing
      }
    , status: "Nothing loaded from server yet"
    , loaded: false

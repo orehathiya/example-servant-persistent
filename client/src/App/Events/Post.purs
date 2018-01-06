@@ -34,7 +34,8 @@ newtype State = State
   , title :: String
   , body :: String
   , settings :: MySettings
-    }
+  , lastError :: Maybe AjaxError
+  }
 
 foldp :: forall fx. Event -> State -> EffModel State Event (ajax :: AJAX, dom:: DOM, history :: HISTORY | fx)
 foldp (ReceivePosts posts) (State st) =
@@ -46,7 +47,6 @@ foldp (ReceivePost post) (State st) =
     post = Just post
   }
 foldp (PostSubmited _) state = noEffects $ state
---onlyEffects state [pure $ Just $ AEvent.PageView RPosts]
 foldp (PostSubmit) (State st) =
   runEffectActions
   (State st)
@@ -61,14 +61,21 @@ foldp (BodyChange ev) (State st) =
     body = targetValue ev
   }
 foldp (ReportError err) (State st) =
-  noEffects $ State st
+  noEffects $ State st {lastError = Just err}
 
 type APIEffect eff = ReaderT MySettings (ExceptT AjaxError (Aff ( ajax :: AJAX, channel :: CHANNEL, exception :: EXCEPTION | eff)))
 
-runEffectActions :: forall fx. State -> Array (APIEffect (fx) Event) -> EffModel State Event (ajax :: AJAX | fx)
-runEffectActions (State st) effects = { state : State st, effects : map (runEffect st.settings) effects }
+runEffectActions :: forall fx. State
+                 -> Array (APIEffect (fx) Event)
+                 -> EffModel State Event (ajax :: AJAX | fx)
+runEffectActions (State st) effects = {
+  state : State st,
+  effects : map (runEffect st.settings) effects
+  }
 
-runEffect :: forall fx. MySettings -> APIEffect (fx) Event -> Aff (channel :: CHANNEL, ajax :: AJAX, exception :: EXCEPTION | fx) (Maybe Event)
+runEffect :: forall fx. MySettings
+          -> APIEffect (fx) Event
+          -> Aff (channel :: CHANNEL, ajax :: AJAX, exception :: EXCEPTION | fx) (Maybe Event)
 runEffect settings m = do
     er <- runExceptT  $ runReaderT m settings
     case er of

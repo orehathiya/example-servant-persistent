@@ -18,11 +18,11 @@ view :: State -> HTML AEvent.Event
 view (State st) =
   div do
     h1 $ text "Posts"
-    ul $ for_ st.posts post
+    ul $ for_ st.posts postView
     postForm (State st)
 
-post :: Entity Post -> HTML AEvent.Event
-post (Entity {key: (Key postid), value: Post post}) =
+postView :: Entity Post -> HTML AEvent.Event
+postView (Entity {key: (Key postid), value: Post post}) =
   li $ a ! href (toURL (RPost postid)) #! onClick (AEvent.Navigate (toURL (RPost postid))) $ text post.title
 
 postForm :: State -> HTML AEvent.Event
