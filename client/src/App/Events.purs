@@ -41,23 +41,14 @@ foldp :: forall fx. Event -> State -> EffModel State Event (ajax :: AJAX, dom:: 
 foldp (PageView route) (State st) =
   case route of
     RPosts -> runEffectActions
-             (State st {
-               route = route
-             , loaded = true
-             })
+             (State st {route = route})
              [ChildEvent <$> (EPost.ReceivePosts <$> getPosts)]
     RPost postid -> runEffectActions
-             (State st {
-               route = route
-             , loaded = true
-             })
+             (State st {route = route})
              [ChildEvent <$> EPost.ReceivePost <$> getPostsByPostid (Key postid)]
-    otherwise -> noEffects $ State st {
-      route = route
-    , loaded = true
-    }
-foldp (Navigate url ev) (State st) =
-  { state: State st
+    otherwise -> noEffects $ State st {route = route}
+foldp (Navigate url ev) state =
+  { state: state
   , effects: [
     liftEff do
       preventDefault ev
@@ -77,15 +68,10 @@ foldp (ChildEvent e) (State st) =
           _ -> ChildEvent ev
 
 foldp (ReceiveUser user) (State st) =
-  noEffects $ State st {
-    user = Just user
-  , status = "User"
-  }
+  noEffects $ State st {user = Just user}
 foldp (RequestUser) state = runEffectActions state [ReceiveUser <$> getUserGetByName "Alice"]
 foldp (ReportError err) (State st) =
-  noEffects $ State st {
-    lastError = Just err
-  }
+  noEffects $ State st {lastError = Just err}
 
 type APIEffect eff = ReaderT MySettings (ExceptT AjaxError (Aff ( ajax :: AJAX, channel :: CHANNEL, exception :: EXCEPTION | eff)))
 

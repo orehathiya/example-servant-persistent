@@ -12,8 +12,6 @@ newtype State = State
   { route :: Route
   , user :: Maybe (Entity User)
   , postChild :: EPost.State
-  , status :: String
-  , loaded :: Boolean
   , settings :: MySettings
   , lastError :: Maybe AjaxError
   }
@@ -31,8 +29,6 @@ init settings url =
      , settings: settings
      , lastError: Nothing
      }
-   , status: "Nothing loaded from server yet"
-   , loaded: false
    , settings: settings
    , lastError: Nothing
   }
