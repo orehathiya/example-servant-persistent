@@ -1,12 +1,12 @@
 module App.View.Layout where
 
 import App.Events (Event(..))
-import App.Routes (Route(..))
+import App.Routes (Route(..), toURL)
 import App.State (State(..))
 import App.View.Homepage as Homepage
 import App.View.NotFound as NotFound
-import App.View.Post.Posts as Posts
 import App.View.Post.Post as Post
+import App.View.Post.Posts as Posts
 import CSS (CSS, backgroundColor, borderRadius, color, display, fontSize, fromString, inlineBlock, key, marginTop, padding, px, value, (?))
 import CSS.Text (textDecoration, noneTextDecoration, letterSpacing)
 import CSS.Text.Transform (textTransform, uppercase)
@@ -14,8 +14,8 @@ import CSS.TextAlign (center, textAlign)
 import Color (rgb)
 import Control.Bind (discard)
 import Data.Function (($), (#))
-import Pux.DOM.HTML (HTML, style)
 import Pux.DOM.Events (onClick)
+import Pux.DOM.HTML (HTML, style)
 import Text.Smolder.HTML (a, div, li)
 import Text.Smolder.HTML.Attributes (className, href)
 import Text.Smolder.Markup (text, (!), (#!))
@@ -24,8 +24,8 @@ view :: State -> HTML Event
 view (State st) =
   div ! className "app" $ do
     style css
-    li $ a ! href "/#/users" #! onClick (Navigate "/#/users") $ text "User"
-    li $ a ! href "/#/posts" #! onClick (Navigate "/#/posts") $ text "Post"
+    li $ a ! href "/users" #! onClick (Navigate "/users") $ text "User"
+    li $ a ! href (toURL RPosts) #! onClick (Navigate $ toURL RPosts) $ text "Post"
 
     case st.route of
       (Home) -> Homepage.view (State st)
