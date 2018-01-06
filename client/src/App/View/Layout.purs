@@ -5,8 +5,8 @@ import App.Routes (Route(..))
 import App.State (State(..))
 import App.View.Homepage as Homepage
 import App.View.NotFound as NotFound
-import App.View.Posts as Posts
-import App.View.Post as Post
+import App.View.Post.Posts as Posts
+import App.View.Post.Post as Post
 import CSS (CSS, backgroundColor, borderRadius, color, display, fontSize, fromString, inlineBlock, key, marginTop, padding, px, value, (?))
 import CSS.Text (textDecoration, noneTextDecoration, letterSpacing)
 import CSS.Text.Transform (textTransform, uppercase)
@@ -29,8 +29,8 @@ view (State st) =
 
     case st.route of
       (Home) -> Homepage.view (State st)
-      (RPosts) -> Posts.view (State st)
-      (RPost postid) -> Post.view (State st)
+      (RPosts) -> Posts.view st.postChild
+      (RPost postid) -> Post.view st.postChild
       (NotFound url) -> NotFound.view (State st)
 
 css :: CSS

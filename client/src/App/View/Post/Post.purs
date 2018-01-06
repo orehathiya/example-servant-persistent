@@ -1,7 +1,7 @@
-module App.View.Post where
+module App.View.Post.Post where
 
 import App.Events (Event)
-import App.State (State(..))
+import App.Events.Post (State(..))
 import Data.Maybe (Maybe(..))
 import Data.Function (($))
 import Database.Persist.Class.PersistEntity (Entity(Entity))

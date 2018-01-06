@@ -2,9 +2,10 @@ module Main where
 
 import Prelude
 
+import App.Config (MySettings)
 import App.Events (Event(PageView), foldp)
 import App.Routes (match)
-import App.State (State, MySettings, init)
+import App.State (State, init)
 import App.View.Layout (view)
 import Control.Monad.Eff (Eff)
 import DOM (DOM)

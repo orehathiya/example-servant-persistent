@@ -1,23 +1,17 @@
 module App.State where
 
+import App.Config (MySettings)
+import App.Events.Post (State(..)) as EPost
 import App.Routes (Route, match)
 import Data.Maybe (Maybe(..))
 import Database.Persist.Class.PersistEntity (Entity)
 import Model.User (User)
-import Model.Post (Post)
-import Servant.PureScript.Settings (SPSettings_)
-import ServerAPI (SPParams_)
 import Servant.PureScript.Affjax (AjaxError)
-
-type MySettings = SPSettings_ SPParams_
 
 newtype State = State
   { route :: Route
   , user :: Maybe (Entity User)
-  , posts :: Array (Entity Post)
-  , post :: Maybe (Entity Post)
-  , title :: String
-  , body :: String
+  , postChild :: EPost.State
   , status :: String
   , loaded :: Boolean
   , settings :: MySettings
@@ -29,10 +23,13 @@ init settings url =
   State {
      route: match url
    , user: Nothing
-   , posts: []
-   , post: Nothing
-   , title: ""
-   , body: ""
+   , postChild: EPost.State {
+       posts: []
+     , post: Nothing
+     , title: ""
+     , body: ""
+     , settings: settings
+     }
    , status: "Nothing loaded from server yet"
    , loaded: false
    , settings: settings
