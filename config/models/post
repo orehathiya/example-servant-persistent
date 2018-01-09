@@ -1,5 +1,5 @@
 Post json
   title Text
   body Text
-  created UTCTime Maybe
+  created UTCTime default=CURRENT_TIME
   deriving Eq Read Show Generic

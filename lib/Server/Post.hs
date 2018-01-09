@@ -7,6 +7,7 @@ module Server.Post where
 import Control.Monad.IO.Class
 import Database.Persist
 import Database.Persist.Sql
+import Data.Time
 import Servant
 
 import Api.Post
@@ -19,8 +20,9 @@ postAddH :: ConnectionPool -> MP.Post -> Handler (Maybe MP.PostId)
 postAddH pool newPost = liftIO $ postAdd pool newPost
   where
     postAdd :: ConnectionPool -> MP.Post -> IO (Maybe MP.PostId)
-    postAdd pool newPost =
-      flip runSqlPersistMPool pool $ Just <$> insert newPost
+    postAdd pool newPost = do
+      time <- getCurrentTime
+      flip runSqlPersistMPool pool $ Just <$> insert newPost {MP.created = time}
 
 postGetH :: ConnectionPool -> MP.PostId -> Handler (Entity MP.Post)
 postGetH pool postid = do

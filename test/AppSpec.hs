@@ -69,13 +69,15 @@ spec =
         try port (userAdd a) `shouldReturn` Right Nothing
     describe "/posts" $
       it "allows to add a post" $ \port -> do
-        let post = Post "title1" "body1" Nothing
+        let post = Post "title1" "body1" MP.dummyTime
         res <- try port $ postAdd post
         let postId :: MP.PostId =
               case res of
                 Right mPostId -> fromMaybe (MP.PostKey 0) mPostId
                 Left _ -> MP.PostKey 0
-        try port (postGet postId) `shouldReturn` Right (Entity postId post)
+        Right (Entity _ resPost) <- try port (postGet postId)
+        title resPost  `shouldBe` title post
+        body resPost  `shouldBe` body post
 
 withApp :: (Int -> IO a) -> IO a
 withApp action =

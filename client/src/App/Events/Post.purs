@@ -50,7 +50,7 @@ foldp (PostSubmited _) state = noEffects $ state
 foldp (PostSubmit) (State st) =
   runEffectActions
   (State st)
-  [PostSubmited <$> postPosts (Post {title: st.title, body: st.body, created: Nothing})]
+  [PostSubmited <$> postPosts (Post {title: st.title, body: st.body, created: dummyTime})]
 
 foldp (TitleChange ev) (State st) =
   noEffects $ State st {
@@ -81,3 +81,6 @@ runEffect settings m = do
     case er of
       Left err -> pure $ Just $ ReportError err
       Right v -> pure $ Just $ v
+
+dummyTime :: String
+dummyTime = "1858-11-17T00:00:00Z"
