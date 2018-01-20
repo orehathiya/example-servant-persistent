@@ -73,5 +73,5 @@ myTypes =
 main :: IO ()
 main = do
   let frontEndRoot = "client/src"
-  writeAPIModule frontEndRoot myBridgeProxy appApi
+  writeAPIModule frontEndRoot myBridgeProxy api
   writePSTypes frontEndRoot (buildBridge myBridge) myTypes

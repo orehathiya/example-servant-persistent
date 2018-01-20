@@ -12,11 +12,7 @@ import Api.Report
 import Api.User
 import Api.Post
 
-type Api = AppApi :<|> Raw
-type AppApi = UsersApi :<|> ReportsApi :<|> PostsApi
+type Api = UsersApi :<|> ReportsApi :<|> PostsApi
 
 api :: Proxy Api
 api = Proxy
-
-appApi :: Proxy AppApi
-appApi = Proxy

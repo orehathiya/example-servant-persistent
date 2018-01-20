@@ -30,7 +30,7 @@ reportGet :: ClientM [Entity Report]
 postsGet :: ClientM [Entity MP.Post]
 postGet :: Key MP.Post -> ClientM (Entity MP.Post)
 postAdd :: MP.Post -> ClientM (Maybe MP.PostId)
-(userAdd :<|> userGet) :<|> reportGet :<|> (postAdd :<|> postGet :<|> postsGet)= client appApi
+(userAdd :<|> userGet) :<|> reportGet :<|> (postAdd :<|> postGet :<|> postsGet)= client api
 
 spec :: Spec
 spec =

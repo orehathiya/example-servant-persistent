@@ -5,6 +5,7 @@ module Main where
 
 import Data.Yaml.Config
 import Prelude hiding (readFile)
+import Network.Wai.Middleware.Cors (cors, simpleCorsResourcePolicy, corsRequestHeaders)
 import Network.Wai.Handler.Warp as Warp
 
 import App hiding (app)
@@ -20,4 +21,7 @@ main = do
 run :: Config -> IO ()
 run config = do
   app <- mkApp $ database config
-  Warp.run (port config) app
+  Warp.run (port config) $ cors (const $ Just policy) app
+  where
+    policy = simpleCorsResourcePolicy
+               { corsRequestHeaders = [ "content-type" ] }

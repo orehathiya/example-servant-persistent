@@ -44,6 +44,8 @@ executables:
     source-dirs:
       - src
     ghc-options: -Wall
+    dependencies:
+      - wai-cors
   psGenerator:
     main: PSGenerator.hs
     source-dirs:
