@@ -29,10 +29,6 @@
     "node": "^6.0.0"
   },
   "dependencies": {
-    "react": "^15.0.0",
-    "react-dom": "^15.0.0"
-  },
-  "devDependencies": {
     "preact": "^8.2.1",
     "preact-compat": "^3.17.0",
     "pulp": "^12.0.1",
