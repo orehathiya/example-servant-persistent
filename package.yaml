@@ -22,6 +22,7 @@ dependencies:
   - persistent-template
   - persistent-sqlite
   - servant
+  - servant-client
   - servant-docs
   - servant-server
   - string-conversions
@@ -69,7 +70,6 @@ tests:
     dependencies:
       - hspec
       - exceptions
-      - servant-client
       - http-client
       - http-media
       - mockery

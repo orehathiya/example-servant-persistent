@@ -1,3 +1,5 @@
+{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE DataKinds #-}
@@ -19,18 +21,21 @@ import Test.Hspec
 import Test.Mockery.Directory
 
 import Api
+import Api.RestApi
 import App hiding (app)
 import Model.User
 import Model.Report
 import Model.Post as MP
 
+
+userClient :<|> reportClient :<|> postClient = client api
+
 userAdd :: User -> ClientM (Maybe (Key User))
 userGet :: Text -> ClientM (Entity User)
+userAdd :<|> userGet = userClient
+
 reportGet :: ClientM [Entity Report]
-postsGet :: ClientM [Entity MP.Post]
-postGet :: Key MP.Post -> ClientM (Entity MP.Post)
-postAdd :: MP.Post -> ClientM (Maybe MP.PostId)
-(userAdd :<|> userGet) :<|> reportGet :<|> (postAdd :<|> postGet :<|> postsGet)= client api
+reportGet = reportClient
 
 spec :: Spec
 spec =
@@ -68,16 +73,36 @@ spec =
         _ <- try port $ userAdd a
         try port (userAdd a) `shouldReturn` Right Nothing
     describe "/posts" $
-      it "allows to add a post" $ \port -> do
+      it "allows to add, update and delete a post" $ \port -> do
+        -- add
+        let ApiClient{..} :: ApiClient MP.Post MP.PostId = mkApiClient
         let post = Post "title1" "body1" MP.dummyTime
-        res <- try port $ postAdd post
+        res <- try port $ addC post
         let postId :: MP.PostId =
               case res of
                 Right mPostId -> fromMaybe (MP.PostKey 0) mPostId
                 Left _ -> MP.PostKey 0
-        Right (Entity _ resPost) <- try port (postGet postId)
+        -- get
+        let WithIdClient{..} :: WithIdClient MP.Post MP.PostId = mkWithIdClient postId
+        Right (Entity _ resPost) <- try port getC
         title resPost  `shouldBe` title post
         body resPost  `shouldBe` body post
+
+        -- update
+        let newPost = Post "title2" "body2" MP.dummyTime
+        _ <- try port $ updateC newPost
+        Right (Entity _ resPost) <- try port getC
+        title resPost  `shouldBe` title newPost
+        body resPost  `shouldBe` body newPost
+
+        -- delete
+        _ <- try port deleteC
+        try port getC `shouldReturn` Left
+          (FailureResponse
+             (UrlReq (BaseUrl Http "localhost" port "") defReq)
+             notFound404
+             ("application" // "octet-stream")
+             "(╯°□°）╯︵ ┻━┻).")
 
 withApp :: (Int -> IO a) -> IO a
 withApp action =

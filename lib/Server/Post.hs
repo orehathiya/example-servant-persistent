@@ -11,10 +11,17 @@ import Data.Time
 import Servant
 
 import Api.Post
+import Api.RestApi
 import qualified Model.Post as MP
 
 postsServer :: ConnectionPool -> Server PostsApi
-postsServer pool = postAddH pool :<|> postGetH pool :<|> postsGetH pool
+postsServer pool = serverFor pool postsGetH postAddH postGetH postUpdateH postDeleteH
+
+postsGetH :: ConnectionPool ->  Handler [Entity MP.Post]
+postsGetH pool = liftIO $ postsGet pool
+  where
+    postsGet :: ConnectionPool -> IO [Entity MP.Post]
+    postsGet pool = flip runSqlPersistMPool pool $ selectList [] []
 
 postAddH :: ConnectionPool -> MP.Post -> Handler (Maybe MP.PostId)
 postAddH pool newPost = liftIO $ postAdd pool newPost
@@ -34,8 +41,18 @@ postGetH pool postid = do
     postGet :: ConnectionPool -> MP.PostId -> Handler (Maybe MP.Post)
     postGet pool postid = liftIO $ flip runSqlPersistMPool pool $ get postid
 
-postsGetH :: ConnectionPool ->  Handler [Entity MP.Post]
-postsGetH pool = liftIO $ postsGet pool
+postUpdateH :: ConnectionPool -> MP.PostId -> MP.Post -> Handler NoContent
+postUpdateH pool postid newPost = liftIO $ postUpdate pool postid newPost
   where
-    postsGet :: ConnectionPool -> IO [Entity MP.Post]
-    postsGet pool = flip runSqlPersistMPool pool $ selectList [] []
+    postUpdate :: ConnectionPool -> MP.PostId -> MP.Post -> IO NoContent
+    postUpdate pool postid newPost = do
+      flip runSqlPersistMPool pool $ replace postid newPost
+      return NoContent
+
+postDeleteH :: ConnectionPool -> MP.PostId -> Handler NoContent
+postDeleteH pool postid = liftIO $ postDelete pool postid
+  where
+    postDelete :: ConnectionPool -> MP.PostId -> IO NoContent
+    postDelete pool postid = do
+      flip runSqlPersistMPool pool $ delete postid
+      return NoContent
