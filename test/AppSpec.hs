@@ -28,6 +28,9 @@ import Model.Report
 import Model.Post as MP
 
 
+postClient :: ClientM [Entity MP.Post] :<|> ((MP.Post -> ClientM (Maybe PostId)) :<|> (Key MP.Post -> ClientM (Entity MP.Post) :<|> ((MP.Post -> ClientM NoContent) :<|> ClientM NoContent)))
+reportClient :: ClientM [Entity Report]
+userClient :: (User -> ClientM (Maybe UserId)) :<|> (Text -> ClientM (Entity User))
 userClient :<|> reportClient :<|> postClient = client api
 
 userAdd :: User -> ClientM (Maybe (Key User))
@@ -91,9 +94,9 @@ spec =
         -- update
         let newPost = Post "title2" "body2" MP.dummyTime
         _ <- try port $ updateC newPost
-        Right (Entity _ resPost) <- try port getC
-        title resPost  `shouldBe` title newPost
-        body resPost  `shouldBe` body newPost
+        Right (Entity _ resNewPost) <- try port getC
+        title resNewPost  `shouldBe` title newPost
+        body resNewPost  `shouldBe` body newPost
 
         -- delete
         _ <- try port deleteC
