@@ -1,4 +1,3 @@
-{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeFamilies #-}
@@ -21,12 +20,10 @@ import Test.Hspec
 import Test.Mockery.Directory
 
 import Api
-import Api.RestApi
 import App hiding (app)
 import Model.User
 import Model.Report
 import Model.Post as MP
-
 
 postClient :: ClientM [Entity MP.Post] :<|> ((MP.Post -> ClientM (Maybe PostId)) :<|> (Key MP.Post -> ClientM (Entity MP.Post) :<|> ((MP.Post -> ClientM NoContent) :<|> ClientM NoContent)))
 reportClient :: ClientM [Entity Report]
@@ -77,8 +74,7 @@ spec =
         try port (userAdd a) `shouldReturn` Right Nothing
     describe "/posts" $
       it "allows to add, update and delete a post" $ \port -> do
-        -- add
-        let ApiClient{..} :: ApiClient MP.Post MP.PostId = mkApiClient
+        let _ :<|> addC :<|> withIdClient = postClient
         let post = Post "title1" "body1" MP.dummyTime
         res <- try port $ addC post
         let postId :: MP.PostId =
@@ -86,7 +82,7 @@ spec =
                 Right mPostId -> fromMaybe (MP.PostKey 0) mPostId
                 Left _ -> MP.PostKey 0
         -- get
-        let WithIdClient{..} :: WithIdClient MP.Post MP.PostId = mkWithIdClient postId
+        let getC :<|> updateC :<|> deleteC = withIdClient postId
         Right (Entity _ resPost) <- try port getC
         title resPost  `shouldBe` title post
         body resPost  `shouldBe` body post

@@ -1,7 +1,5 @@
 module App.Events.Post where
 
-import ServerAPI
-
 import App.Config (MySettings)
 import Control.Monad.Aff (Aff)
 import Control.Monad.Eff.Exception (EXCEPTION)
@@ -18,6 +16,7 @@ import Prelude (bind, map, pure, ($), (<$>))
 import Pux (EffModel, noEffects)
 import Pux.DOM.Events (DOMEvent, targetValue)
 import Servant.PureScript.Affjax (AjaxError)
+import ServerAPI (postPosts)
 import Signal.Channel (CHANNEL)
 
 data Event = ReceivePosts (Array (Entity Post))

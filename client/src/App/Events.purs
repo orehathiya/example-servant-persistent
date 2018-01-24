@@ -1,7 +1,5 @@
 module App.Events where
 
-import ServerAPI
-
 import App.Config (MySettings)
 import App.Events.Post (Event(..), State(..), foldp) as EPost
 import App.Routes (Route(..), match)
@@ -28,6 +26,7 @@ import Prim (Array, String)
 import Pux (EffModel, mapEffects, mapState, noEffects, onlyEffects)
 import Pux.DOM.Events (DOMEvent)
 import Servant.PureScript.Affjax (AjaxError)
+import ServerAPI (getPosts, getPostsById, getUserGetByName)
 import Signal.Channel (CHANNEL)
 
 data Event = PageView Route
@@ -45,7 +44,7 @@ foldp (PageView RPosts) (State st) =
 foldp (PageView (RPost postid)) (State st) =
   runEffectActions
   (State st {route = RPost postid})
-  [ChildPostEvent <$> EPost.ReceivePost <$> getPostsByPostid (Key postid)]
+  [ChildPostEvent <$> EPost.ReceivePost <$> getPostsById (Key postid)]
 foldp (PageView route) (State st) =
   noEffects $ State st {route = route}
 foldp (Navigate url ev) state =
