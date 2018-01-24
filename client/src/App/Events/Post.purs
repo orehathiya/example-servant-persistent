@@ -7,16 +7,18 @@ import Control.Monad.Except.Trans (ExceptT, runExceptT)
 import Control.Monad.Reader.Trans (ReaderT, runReaderT)
 import DOM (DOM)
 import DOM.HTML.Types (HISTORY)
+import Data.Array (filter)
 import Data.Either (Either(..))
+import Data.Eq ((/=))
 import Data.Maybe (Maybe(..))
-import Database.Persist.Class.PersistEntity (Entity, Key)
+import Database.Persist.Class.PersistEntity (Entity(..), Key(..))
 import Model.Post (Post(..))
 import Network.HTTP.Affjax (AJAX)
 import Prelude (bind, map, pure, ($), (<$>))
 import Pux (EffModel, noEffects)
 import Pux.DOM.Events (DOMEvent, targetValue)
 import Servant.PureScript.Affjax (AjaxError)
-import ServerAPI (postPosts)
+import ServerAPI (deletePostsById, postPosts, putPostsById)
 import Signal.Channel (CHANNEL)
 
 data Event = ReceivePosts (Array (Entity Post))
@@ -25,6 +27,11 @@ data Event = ReceivePosts (Array (Entity Post))
            | PostSubmited (Maybe (Key Post))
            | TitleChange DOMEvent
            | BodyChange DOMEvent
+           | EditPost Post
+           | PostUpdated
+           | UpdatePost (Entity Post)
+           | PostDeleted
+           | DeletePost (Key Post)
            | ReportError AjaxError
 
 newtype State = State
@@ -32,6 +39,7 @@ newtype State = State
   , post :: Maybe (Entity Post)
   , title :: String
   , body :: String
+  , editing :: Boolean
   , settings :: MySettings
   , lastError :: Maybe AjaxError
   }
@@ -59,6 +67,36 @@ foldp (BodyChange ev) (State st) =
   noEffects $ State st {
     body = targetValue ev
   }
+foldp (EditPost (Post post)) (State st) =
+  noEffects $ State st {
+    title = post.title,
+    body = post.body,
+    editing = true
+  }
+foldp PostUpdated state = noEffects $ state
+foldp (UpdatePost (Entity {key: key, value: post})) (State st) =
+  runEffectActions
+  (State st {
+      editing = false
+    , post = Just $ (Entity {key: key, value: post})
+    })
+  [
+    do
+      _ <- putPostsById post key
+      pure $ PostUpdated
+  ]
+foldp PostDeleted state = noEffects $ state
+foldp (DeletePost (Key delId)) (State st) =
+  runEffectActions
+  (State st {
+    posts = filter (\(Entity {key: (Key id), value: post}) -> id /= delId) st.posts
+    })
+  [
+    do
+      _ <- deletePostsById (Key delId)
+      pure $ PostDeleted
+  ]
+
 foldp (ReportError err) (State st) =
   noEffects $ State st {lastError = Just err}
 

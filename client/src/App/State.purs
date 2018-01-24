@@ -26,6 +26,7 @@ init settings url =
      , post: Nothing
      , title: ""
      , body: ""
+     , editing: false
      , settings: settings
      , lastError: Nothing
      }

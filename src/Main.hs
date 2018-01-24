@@ -5,8 +5,10 @@ module Main where
 
 import Data.Yaml.Config
 import Prelude hiding (readFile)
-import Network.Wai.Middleware.Cors (cors, simpleCorsResourcePolicy, corsRequestHeaders)
+import Network.Wai.Middleware.Cors (cors, simpleCorsResourcePolicy, corsMethods, corsRequestHeaders)
 import Network.Wai.Handler.Warp as Warp
+import Network.HTTP.Types.Method
+import Network.HTTP.Types.Header
 
 import App hiding (app)
 import Config
@@ -24,4 +26,5 @@ run config = do
   Warp.run (port config) $ cors (const $ Just policy) app
   where
     policy = simpleCorsResourcePolicy
-               { corsRequestHeaders = [ "content-type" ] }
+               { corsMethods = [methodGet, methodPost, methodHead, methodPut, methodDelete]
+               , corsRequestHeaders = [ hContentType ] }
