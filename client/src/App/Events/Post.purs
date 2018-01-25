@@ -5,6 +5,7 @@ import Control.Monad.Aff (Aff)
 import Control.Monad.Eff.Exception (EXCEPTION)
 import Control.Monad.Except.Trans (ExceptT, runExceptT)
 import Control.Monad.Reader.Trans (ReaderT, runReaderT)
+import Control.Apply ((*>))
 import DOM (DOM)
 import DOM.HTML.Types (HISTORY)
 import Data.Array (filter)
@@ -53,7 +54,7 @@ foldp (ReceivePost post) (State st) =
   noEffects $ State st {
     post = Just post
   }
-foldp (PostSubmited _) state = noEffects $ state
+foldp (PostSubmited _) state = noEffects state
 foldp (PostSubmit) (State st) =
   runEffectActions
   (State st)
@@ -73,29 +74,21 @@ foldp (EditPost (Post post)) (State st) =
     body = post.body,
     editing = true
   }
-foldp PostUpdated state = noEffects $ state
+foldp PostUpdated state = noEffects state
 foldp (UpdatePost (Entity {key: key, value: post})) (State st) =
   runEffectActions
   (State st {
       editing = false
-    , post = Just $ (Entity {key: key, value: post})
+    , post = Just $ Entity {key: key, value: post}
     })
-  [
-    do
-      _ <- putPostsById post key
-      pure $ PostUpdated
-  ]
-foldp PostDeleted state = noEffects $ state
+  [putPostsById post key *> pure PostUpdated]
+foldp PostDeleted state = noEffects state
 foldp (DeletePost (Key delId)) (State st) =
   runEffectActions
   (State st {
     posts = filter (\(Entity {key: (Key id), value: post}) -> id /= delId) st.posts
     })
-  [
-    do
-      _ <- deletePostsById (Key delId)
-      pure $ PostDeleted
-  ]
+  [deletePostsById (Key delId) *> pure PostDeleted]
 
 foldp (ReportError err) (State st) =
   noEffects $ State st {lastError = Just err}
