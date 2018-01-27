@@ -18,6 +18,8 @@ dependencies:
   - http-types
   - lens
   - monad-logger
+  - mtl
+  - resourcet
   - persistent
   - persistent-template
   - persistent-sqlite
