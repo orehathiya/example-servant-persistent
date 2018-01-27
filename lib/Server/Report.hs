@@ -5,18 +5,22 @@
 module Server.Report where
 
 import Control.Monad.IO.Class
+import Control.Monad.Trans.Reader
 import Data.Text hiding (map)
 import Database.Persist.Sql
-import Servant
 
 import Api.Report
 import Model.Report
+import Environment
+import Server
 
-reportsServer :: ConnectionPool -> Server ReportsApi
+reportsServer :: AppServer ReportsApi
 reportsServer = reportGetH
 
-reportGetH :: ConnectionPool -> Handler [Entity Report]
-reportGetH pool = liftIO $ reportGet pool
+reportGetH :: AppHandler [Entity Report]
+reportGetH = do
+  pool <- asks pool
+  liftIO $ reportGet pool
   where
     reportGet :: ConnectionPool -> IO [Entity Report]
     reportGet pool =

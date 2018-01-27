@@ -21,6 +21,7 @@ import Test.Mockery.Directory
 
 import Api
 import App hiding (app)
+import Config hiding (port)
 import Model.User
 import Model.Report
 import Model.Post as MP
@@ -106,7 +107,7 @@ spec =
 withApp :: (Int -> IO a) -> IO a
 withApp action =
   inTempDirectory $ do
-    app <- mkApp "sqlite.db"
+    app <- mkApp $ Config 3000 "sqlite.db"
     testWithApplication (return app) action
 
 try :: Int -> ClientM a -> IO (Either ServantError a)

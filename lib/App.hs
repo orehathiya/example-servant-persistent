@@ -1,3 +1,4 @@
+{-# LANGUAGE TypeOperators #-}
 {-# OPTIONS_GHC -fno-warn-name-shadowing #-}
 
 module App where
@@ -11,19 +12,24 @@ import Servant
 
 import Api
 import Model
+import Server
 import Server.Report
 import Server.User
 import Server.Post
+import Config
+import Environment
 
-server :: ConnectionPool -> Server Api
-server pool =
-  usersServer pool :<|> reportsServer pool :<|> postsServer pool
+app :: Environment -> Application
+app env = serve api $ appToServer env
 
-app :: ConnectionPool -> Application
-app pool = serve api $ server pool
+appToServer :: Environment -> Server Api
+appToServer env = enter (runReaderTNat env :: AppHandler :~> Handler) server
 
-mkApp :: FilePath -> IO Application
-mkApp sqliteFile = do
-  pool <- runStderrLoggingT $ createSqlitePool (cs sqliteFile) 5
+server :: AppServer Api
+server = usersServer :<|> reportsServer :<|> postsServer
+
+mkApp :: Config -> IO Application
+mkApp cfg = do
+  pool <- runStderrLoggingT $ createSqlitePool (cs $ database cfg) 5
   runSqlPool (runMigration migrateAll) pool
-  return $ app pool
+  return $ app $ Environment pool cfg
