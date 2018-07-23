@@ -75,18 +75,18 @@ foldp (EditPost (Post post)) (State st) =
     editing = true
   }
 foldp PostUpdated state = noEffects state
-foldp (UpdatePost (Entity {key: key, value: post})) (State st) =
+foldp (UpdatePost (Entity {entityKey: key, entityVal: post})) (State st) =
   runEffectActions
   (State st {
       editing = false
-    , post = Just $ Entity {key: key, value: post}
+    , post = Just $ Entity {entityKey: key, entityVal: post}
     })
   [putPostsById post key *> pure PostUpdated]
 foldp PostDeleted state = noEffects state
 foldp (DeletePost (Key delId)) (State st) =
   runEffectActions
   (State st {
-    posts = filter (\(Entity {key: (Key id), value: post}) -> id /= delId) st.posts
+    posts = filter (\(Entity {entityKey: (Key id), entityVal: post}) -> id /= delId) st.posts
     })
   [deletePostsById (Key delId) *> pure PostDeleted]
 

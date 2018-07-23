@@ -22,7 +22,7 @@ view (State st) =
     postForm (State st)
 
 postView :: Entity Post -> HTML AEvent.Event
-postView (Entity {key: (Key postid), value: Post post}) = do
+postView (Entity {entityKey: (Key postid), entityVal: Post post}) = do
   li $ a ! href (toURL (RPost postid)) #! onClick (AEvent.Navigate (toURL (RPost postid))) $ text post.title
   button #! onClick (const $ AEvent.ChildPostEvent $ DeletePost (Key postid)) $ text "delete"
 

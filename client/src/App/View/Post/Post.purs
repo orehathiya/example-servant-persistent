@@ -18,11 +18,11 @@ view (State st) =
   div do
     h1 $ text "Posts"
     case st.post of
-      Just (Entity {key: key, value: Post post}) -> do
+      Just (Entity {entityKey: key, entityVal: Post post}) -> do
         if st.editing then do
           input ! type' "text" ! value st.title #! onChange \e -> (AEvent.ChildPostEvent $ TitleChange e)
           input ! type' "text" ! value st.body #! onChange \e -> (AEvent.ChildPostEvent $ BodyChange e)
-          button #! onClick (const $ AEvent.ChildPostEvent $ UpdatePost (Entity {key: key, value: Post post {title = st.title, body = st.body}})) $ text "update"
+          button #! onClick (const $ AEvent.ChildPostEvent $ UpdatePost (Entity {entityKey: key, entityVal: Post post {title = st.title, body = st.body}})) $ text "update"
           else do
             text post.title
             text post.body

@@ -19,7 +19,7 @@ view (State st) =
     h1 $ text "Homepage"
     button #! onClick (const RequestUser) $ text "Fetch user"
     case st.user of
-      Just (Entity {key: _, value: User user}) -> do
+      Just (Entity {entityKey: _, entityVal: User user}) -> do
         text user.name
         text $ show user.age
       Nothing -> text "nothing user"
