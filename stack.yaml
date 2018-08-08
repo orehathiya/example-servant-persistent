@@ -1,10 +1,17 @@
-resolver: lts-10.0
+resolver: lts-12.2
 packages:
   - '.'
 extra-deps:
   - datetime-0.3.1
-docker:
-  enable: true
+  - servant-0.13.0.1
+  - servant-client-0.13.0.1
+  - servant-client-core-0.13.0.1
+  - servant-server-0.13.0.1
+  - servant-purescript-0.9.0.2
+  - servant-subscriber-0.6.0.1
+
+# docker:
+#   enable: true
 
 image:
   containers:

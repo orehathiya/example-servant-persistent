@@ -4,6 +4,7 @@
 module App where
 
 import Control.Monad.Logger (runStderrLoggingT)
+import Control.Monad.Trans.Reader (runReaderT)
 import Data.String.Conversions
 import Database.Persist.Sql
 import Database.Persist.Sqlite
@@ -22,8 +23,11 @@ import Environment
 app :: Environment -> Application
 app env = serve api $ appToServer env
 
+nt :: Environment -> AppHandler a -> Handler a
+nt env r = runReaderT r env
+
 appToServer :: Environment -> Server Api
-appToServer env = enter (runReaderTNat env :: AppHandler :~> Handler) server
+appToServer env = hoistServer api (nt env) server
 
 server :: AppServer Api
 server = usersServer :<|> reportsServer :<|> postsServer

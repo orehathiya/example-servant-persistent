@@ -42,24 +42,16 @@ myBridgeProxy = Proxy
 instance HasBridge MyBridge where
   languageBridge _ = buildBridge myBridge
 
-data MyEntity record = Entity
-  { key :: Key record
-  , value :: record
-  } deriving (Generic)
-
 newtype MyKey a =
   Key Int
   deriving (Generic)
-
-instance Generic (Entity a) where
-  type Rep (Entity a) = Rep (MyEntity a)
-  from = from
-  to = to
 
 instance Generic (Key a) where
   type Rep (Key a) = Rep (MyKey a)
   from = from
   to = to
+
+instance Generic A
 
 myTypes :: [SumType 'Haskell]
 myTypes =

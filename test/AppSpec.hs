@@ -6,16 +6,15 @@
 
 module AppSpec where
 
-import Data.Text
+import Data.Text hiding (empty)
 import Data.Maybe
 import Database.Persist
 import Network.HTTP.Client hiding (port)
-import Network.HTTP.Media.MediaType
 import Network.HTTP.Types.Status
+import Network.HTTP.Types.Version
 import Network.Wai.Handler.Warp
 import Servant.API hiding (addHeader)
 import Servant.Client
-import Servant.Common.Req hiding (manager, baseUrl)
 import Test.Hspec
 import Test.Mockery.Directory
 
@@ -42,14 +41,11 @@ spec :: Spec
 spec =
   around withApp $ do
     describe "/user/get" $
-      it "throw Exception for non-existing users" $ \port ->
-        try port (userGet "foo") `shouldReturn`
-        Left
-          (FailureResponse
-             (UrlReq (BaseUrl Http "localhost" port "") defReq)
-             notFound404
-             ("application" // "octet-stream")
-             "(╯°□°）╯︵ ┻━┻).")
+      it "throw Exception for non-existing users" $ \port -> do
+        Left (FailureResponse (Response rstatus _ rversion rbody)) <- try port (userGet "foo")
+        rstatus  `shouldBe` notFound404
+        rversion `shouldBe` http11
+        rbody `shouldBe` "(╯°□°）╯︵ ┻━┻)."
     describe "/user/add" $ do
       it "allows to add a user" $ \port -> do
         let user :: User = User "Alice" 1
@@ -97,12 +93,10 @@ spec =
 
         -- delete
         _ <- try port deleteC
-        try port getC `shouldReturn` Left
-          (FailureResponse
-             (UrlReq (BaseUrl Http "localhost" port "") defReq)
-             notFound404
-             ("application" // "octet-stream")
-             "(╯°□°）╯︵ ┻━┻).")
+        Left (FailureResponse (Response rstatus _ rversion rbody)) <- try port getC
+        rstatus  `shouldBe` notFound404
+        rversion `shouldBe` http11
+        rbody `shouldBe` "(╯°□°）╯︵ ┻━┻)."
 
 withApp :: (Int -> IO a) -> IO a
 withApp action =
@@ -114,4 +108,4 @@ try :: Int -> ClientM a -> IO (Either ServantError a)
 try port action = do
   manager <- newManager defaultManagerSettings
   let baseUrl = BaseUrl Http "localhost" port ""
-  runClientM action $ ClientEnv manager baseUrl
+  runClientM action $ ClientEnv manager baseUrl Nothing
