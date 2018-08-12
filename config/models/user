@@ -1,4 +1,4 @@
-User json
+User
   name Text
   age  Int
   UniqueName name

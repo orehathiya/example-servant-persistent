@@ -1,3 +1,5 @@
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE EmptyDataDecls #-}
@@ -12,6 +14,7 @@
 
 module Model.Post where
 
+import Data.Aeson
 import Data.Time.Clock
 import Data.Time.Calendar
 import Data.Text
@@ -23,15 +26,16 @@ import Servant.Docs
 
 mkPersist
   sqlSettings
-  { mpsPrefixFields = False
-  , mpsEntityJSON =
-      Just
-        EntityJSON
-        { entityToJSON = 'keyValueEntityToJSON
-        , entityFromJSON = 'keyValueEntityFromJSON
-        }
-  }
+  { mpsPrefixFields = False }
   $(persistFileWith lowerCaseSettings "config/models/post")
+
+instance ToJSON (Entity Post) where
+  toJSON (Entity key val) =
+    object ["entityKey" .= fromSqlKey key,
+            "entityVal" .= toJSON val ]
+deriving instance ToJSON Post
+deriving instance FromJSON Post
+deriving instance Generic (Key Post)
 
 instance ToSample (Entity Post) where
   toSamples _ =

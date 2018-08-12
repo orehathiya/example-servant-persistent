@@ -47,8 +47,8 @@ newtype MyKey a =
   Key Int
   deriving (Generic)
 
-instance Generic (Key a) where
-  type Rep (Key a) = Rep (MyKey a)
+instance Generic (Key A) where
+  type Rep (Key A) = Rep (MyKey A)
   from = from
   to = to
 

@@ -1,4 +1,4 @@
-Post json
+Post
   title Text
   body Text
   created UTCTime default=CURRENT_TIME
