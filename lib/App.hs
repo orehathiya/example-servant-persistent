@@ -24,7 +24,7 @@ app :: Environment -> Application
 app env = serve api $ appToServer env
 
 nt :: Environment -> AppHandler a -> Handler a
-nt env x = runReaderT x env
+nt env r = runReaderT r env
 
 appToServer :: Environment -> Server Api
 appToServer env = hoistServer api (nt env) server
