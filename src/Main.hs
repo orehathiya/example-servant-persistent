@@ -4,7 +4,7 @@
 module Main where
 
 import Data.Yaml.Config
-import Prelude hiding (readFile)
+import Prelude
 import Network.Wai.Middleware.Cors (cors, simpleCorsResourcePolicy, corsMethods, corsRequestHeaders)
 import Network.Wai.Handler.Warp as Warp
 import Network.HTTP.Types.Method

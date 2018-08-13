@@ -106,6 +106,6 @@ withApp action =
 
 try :: Int -> ClientM a -> IO (Either ServantError a)
 try port action = do
-  manager <- newManager defaultManagerSettings
-  let baseUrl = BaseUrl Http "localhost" port ""
-  runClientM action $ ClientEnv manager baseUrl Nothing
+  mng <- newManager defaultManagerSettings
+  let bUrl = BaseUrl Http "localhost" port ""
+  runClientM action $ ClientEnv mng bUrl Nothing
