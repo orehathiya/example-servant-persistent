@@ -35,13 +35,6 @@ dependencies:
   - warp
   - yaml
 executables:
-  example-servant-persistent-doc:
-    main: Doc.hs
-    source-dirs:
-      - doc
-    ghc-options: -Wall
-    dependencies:
-      - aeson-pretty
   example-servant-persistent:
     main: Main.hs
     source-dirs:
@@ -49,6 +42,22 @@ executables:
     ghc-options: -Wall
     dependencies:
       - wai-cors
+  example-servant-persistent-doc:
+    main: Doc.hs
+    source-dirs:
+      - doc
+    ghc-options: -Wall
+    dependencies:
+      - aeson-pretty
+  example-servant-persistent-swagger:
+    main: Swagger.hs
+    source-dirs:
+      - swagger
+    ghc-options: -Wall
+    dependencies:
+      - swagger2
+      - servant-swagger
+      - aeson-pretty
   psGenerator:
     main: PSGenerator.hs
     source-dirs:
