@@ -6,14 +6,14 @@
 
 module AppSpec where
 
-import Data.Text hiding (empty)
+import Data.Text
 import Data.Maybe
 import Database.Persist
 import Network.HTTP.Client hiding (port)
 import Network.HTTP.Types.Status
 import Network.HTTP.Types.Version
 import Network.Wai.Handler.Warp
-import Servant.API hiding (addHeader)
+import Servant.API
 import Servant.Client
 import Test.Hspec
 import Test.Mockery.Directory

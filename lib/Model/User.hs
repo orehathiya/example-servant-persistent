@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE FlexibleInstances #-}
@@ -15,25 +14,24 @@
 module Model.User where
 
 import Data.Text
-import Data.Aeson
 import Database.Persist.Quasi
 import Database.Persist.Sql
 import Database.Persist.TH
 import GHC.Generics
+import Model.Json
 import Servant.Docs
 
 mkPersist
   sqlSettings
-  { mpsPrefixFields = False }
+  { mpsPrefixFields = False
+  , mpsEntityJSON =
+      Just
+        EntityJSON
+        { entityToJSON = 'myKeyValueEntityToJSON
+        , entityFromJSON = 'myKeyValueEntityFromJSON
+        }
+  }
   $(persistFileWith lowerCaseSettings "config/models/user")
-
-instance ToJSON (Entity User) where
-  toJSON (Entity key val) =
-    object ["entityKey" .= fromSqlKey key,
-            "entityVal" .= toJSON val ]
-deriving instance ToJSON User
-deriving instance FromJSON User
-deriving instance Generic (Key User)
 
 instance ToSample (Entity User) where
   toSamples _ =
