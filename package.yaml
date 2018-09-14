@@ -15,6 +15,7 @@ dependencies:
   - aeson
   - basement
   - bytestring
+  - dhall
   - http-types
   - lens
   - monad-logger

@@ -1,19 +1,14 @@
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Config where
 
-import Data.Aeson
-import qualified Data.Yaml as Y
+import Dhall
 
 data Config =
   Config {
-    port :: Int,
+    port :: Natural,
     database  :: String
-  } deriving (Eq, Show)
+  } deriving (Generic, Eq, Show)
 
-instance FromJSON Config where
-  parseJSON (Y.Object v) =
-    Config <$>
-    v .: "port" <*>
-    v .: "database"
-  parseJSON _ = fail "Expected Object for Config value"
+instance Interpret Config
