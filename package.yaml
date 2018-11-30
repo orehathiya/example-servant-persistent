@@ -33,6 +33,7 @@ dependencies:
   - time
   - transformers
   - wai
+  - swagger2
   - warp
   - yaml
 executables:
@@ -56,7 +57,6 @@ executables:
       - swagger
     ghc-options: -Wall
     dependencies:
-      - swagger2
       - servant-swagger
       - aeson-pretty
   psGenerator:

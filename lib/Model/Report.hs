@@ -12,11 +12,14 @@
 
 module Model.Report where
 
+import Data.Swagger
 import Database.Persist.Quasi
 import Database.Persist.Sql
 import Database.Persist.TH
 import GHC.Generics
 import Servant.Docs
+
+import Model ()
 
 mkPersist
   sqlSettings
@@ -42,3 +45,5 @@ instance ToSample Report where
 
 instance ToSample ReportId where
   toSamples _ = singleSample (ReportKey 1)
+
+instance ToSchema Report

@@ -17,7 +17,9 @@ import Data.Text
 import Database.Persist.Quasi
 import Database.Persist.Sql
 import Database.Persist.TH
+import Data.Swagger hiding (name)
 import GHC.Generics
+import Model ()
 import Model.Json
 import Servant.Docs
 
@@ -46,3 +48,5 @@ instance ToSample User where
 
 instance ToSample UserId where
   toSamples _ = singleSample (UserKey 1)
+
+instance ToSchema User

@@ -13,13 +13,15 @@
 
 module Model.Post where
 
-import Data.Time.Clock
-import Data.Time.Calendar
+import Data.Swagger hiding (name, title)
 import Data.Text
+import Data.Time.Calendar
+import Data.Time.Clock
 import Database.Persist.Quasi
 import Database.Persist.Sql
 import Database.Persist.TH
 import GHC.Generics
+import Model ()
 import Model.Json
 import Servant.Docs
 
@@ -53,6 +55,8 @@ instance ToSample Post where
 
 instance ToSample PostId where
   toSamples _ = singleSample (PostKey 1)
+
+instance ToSchema Post
 
 dummyTime :: UTCTime
 dummyTime = UTCTime (ModifiedJulianDay 0) (secondsToDiffTime 0)
