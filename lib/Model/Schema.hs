@@ -2,7 +2,6 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE OverloadedStrings #-}
 
@@ -18,10 +17,9 @@ import Database.Persist
 
 defaultKeyDeclareNamedSchema :: p -> Declare (Definitions Schema) NamedSchema
 defaultKeyDeclareNamedSchema _ =
-    declareNamedSchema (Proxy @Int)
-    & mapped . schema . example ?~ "1"
+  declareNamedSchema (Proxy @Int) & mapped . schema . example ?~ "1"
 
-defaultKeyToParamSchema ::  p -> ParamSchema t
+defaultKeyToParamSchema :: p -> ParamSchema t
 defaultKeyToParamSchema _ = mempty & type_ .~ SwaggerInteger
 
 defaultEntityDeclareNamedSchema
@@ -29,10 +27,10 @@ defaultEntityDeclareNamedSchema
      (Typeable record, ToSchema (Key record), ToSchema record)
   => proxy (Entity record) -> Declare (Definitions Schema) NamedSchema
 defaultEntityDeclareNamedSchema _ = do
-    let valProxy = Proxy @record
-        name_ = showsTypeRep (typeRep valProxy) "Entity"
-    keySchema <- declareSchemaRef (Proxy @(Key record))
-    valSchema <- declareSchemaRef valProxy
-    return $ NamedSchema (Just $ pack name_) $ mempty & type_ .~ SwaggerObject &
-      properties .~
-      [("entityKey", keySchema), ("entityVal", valSchema)]
+  let valProxy = Proxy @record
+      name_ = showsTypeRep (typeRep valProxy) "Entity"
+  keySchema <- declareSchemaRef (Proxy @(Key record))
+  valSchema <- declareSchemaRef valProxy
+  return $ NamedSchema (Just $ pack name_) $ mempty & type_ .~ SwaggerObject &
+    properties .~
+    [("entityKey", keySchema), ("entityVal", valSchema)]
