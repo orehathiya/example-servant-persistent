@@ -11,3 +11,4 @@ doc.md
 *.keter
 TAGS
 *.cabal
+swagger.json
