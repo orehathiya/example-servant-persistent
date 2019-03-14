@@ -36,7 +36,7 @@ stack exec example-servant-persistent-doc
 ``` bash
 cd client
 npm install
-npm run build
+npm start
 ```
 
-Then you can browse top page at http://localhost:3000
+Then you can browse top page at http://localhost:8080
