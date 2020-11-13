@@ -1,4 +1,4 @@
-This project is a small example of [servant-server](http://haskell-servant.readthedocs.io/), [persistent](https://www.stackage.org/package/persistent) and [pux](http://purescript-pux.org/).
+This project is a small example of [servant-server](http://haskell-servant.readthedocs.io/), [persistent](https://www.stackage.org/package/persistent) and [pux](https://github.com/alexmingoia/purescript-pux).
 
 # Server Side
 
