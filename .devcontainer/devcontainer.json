@@ -1,0 +1,7 @@
+{
+	"name": "HaskellDevContainer",
+	"image": "haskell:8.8",
+	"extensions": [
+		"haskell.haskell"
+	]
+}

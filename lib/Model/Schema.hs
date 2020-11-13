@@ -20,7 +20,7 @@ defaultKeyDeclareNamedSchema _ =
   declareNamedSchema (Proxy @Int) & mapped . schema . example ?~ "1"
 
 defaultKeyToParamSchema :: p -> ParamSchema t
-defaultKeyToParamSchema _ = mempty & type_ .~ SwaggerInteger
+defaultKeyToParamSchema _ = mempty & type_ ?~ SwaggerInteger
 
 defaultEntityDeclareNamedSchema
   :: forall record (proxy :: * -> *).
@@ -31,6 +31,6 @@ defaultEntityDeclareNamedSchema _ = do
       name_ = showsTypeRep (typeRep valProxy) "Entity"
   keySchema <- declareSchemaRef (Proxy @(Key record))
   valSchema <- declareSchemaRef valProxy
-  return $ NamedSchema (Just $ pack name_) $ mempty & type_ .~ SwaggerObject &
+  return $ NamedSchema (Just $ pack name_) $ mempty & type_ ?~ SwaggerObject &
     properties .~
     [("entityKey", keySchema), ("entityVal", valSchema)]

@@ -11,4 +11,4 @@ data Config =
     database  :: String
   } deriving (Generic, Eq, Show)
 
-instance Interpret Config
+instance FromDhall Config

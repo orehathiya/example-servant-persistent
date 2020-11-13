@@ -42,7 +42,7 @@ spec =
   around withApp $ do
     describe "/user/get" $
       it "throw Exception for non-existing users" $ \port -> do
-        Left (FailureResponse (Response rstatus _ rversion rbody)) <- try port (userGet "foo")
+        Left (FailureResponse _ (Response rstatus _ rversion rbody)) <- try port (userGet "foo")
         rstatus  `shouldBe` notFound404
         rversion `shouldBe` http11
         rbody `shouldBe` "(╯°□°）╯︵ ┻━┻)."
@@ -93,7 +93,7 @@ spec =
 
         -- delete
         _ <- try port deleteC
-        Left (FailureResponse (Response rstatus _ rversion rbody)) <- try port getC
+        Left (FailureResponse _ (Response rstatus _ rversion rbody)) <- try port getC
         rstatus  `shouldBe` notFound404
         rversion `shouldBe` http11
         rbody `shouldBe` "(╯°□°）╯︵ ┻━┻)."
@@ -104,7 +104,7 @@ withApp action =
     app <- mkApp $ Config 3000 "sqlite.db"
     testWithApplication (return app) action
 
-try :: Int -> ClientM a -> IO (Either ServantError a)
+try :: Int -> ClientM a -> IO (Either ClientError a)
 try port action = do
   mng <- newManager defaultManagerSettings
   let bUrl = BaseUrl Http "localhost" port ""
