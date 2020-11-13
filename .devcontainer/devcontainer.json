@@ -2,6 +2,7 @@
 	"name": "HaskellDevContainer",
 	"image": "haskell:8.8.4",
 	"extensions": [
-		"haskell.haskell"
+		"haskell.haskell",
+		"editorconfig.editorconfig"
 	]
 }
