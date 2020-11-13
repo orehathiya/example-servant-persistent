@@ -2,34 +2,33 @@ name: Haskell CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-haskell@v1
-      with:
-        ghc-version: '8.8.2'
-        enable-stack: true
-        stack-version: 'latest'
+      - uses: actions/checkout@v2
+      - uses: actions/setup-haskell@v1
+        with:
+          ghc-version: "8.8.4"
+          enable-stack: true
+          stack-version: "latest"
 
-    - name: Cache
-      uses: actions/cache@v1
-      env:
-        cache-name: cache-stack
-      with:
-        path: ~/.stack
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('package.yaml') }}-${{ hashFiles('stack.yaml') }}
-        restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
+      - name: Cache
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-stack
+        with:
+          path: ~/.stack
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('package.yaml') }}-${{ hashFiles('stack.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
 
-    - name: Run tests
-      run: stack test --fast
+      - name: Run tests
+        run: stack test --fast
