@@ -1,5 +1,5 @@
 name: example-servant-persistent
-version: '0.1.0.0'
+version: "0.1.0.0"
 synopsis: example with persistent and servant
 description: Simple example to illustrate how to use persistent and servant in combination.
 category: Web
@@ -8,8 +8,7 @@ author:
 maintainer:
   - merrynewyear6593@gmail.com
 license: BSD3
-source-dirs:
-  - lib
+ghc-options: -Wall
 dependencies:
   - base >=4.8 && <5
   - aeson
@@ -36,35 +35,39 @@ dependencies:
   - swagger2
   - warp
   - yaml
+
+library:
+  source-dirs: lib
+
 executables:
   example-servant-persistent:
     main: Main.hs
     source-dirs:
       - src
-    ghc-options: -Wall
     dependencies:
+      - example-servant-persistent
       - wai-cors
   example-servant-persistent-doc:
     main: Doc.hs
     source-dirs:
       - doc
-    ghc-options: -Wall
     dependencies:
+      - example-servant-persistent
       - aeson-pretty
   example-servant-persistent-swagger:
     main: Swagger.hs
     source-dirs:
       - swagger
-    ghc-options: -Wall
     dependencies:
+      - example-servant-persistent
       - servant-swagger
       - aeson-pretty
   psGenerator:
     main: PSGenerator.hs
     source-dirs:
       - gen
-    ghc-options: -Wall
     dependencies:
+      - example-servant-persistent
       - containers
       - filepath
       - http-api-data
@@ -78,8 +81,8 @@ tests:
     main: Spec.hs
     source-dirs:
       - test
-    ghc-options: -Wall
     dependencies:
+      - example-servant-persistent
       - hspec
       - exceptions
       - http-client
