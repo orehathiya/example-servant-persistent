@@ -1,17 +1,15 @@
-{-# OPTIONS_GHC -fno-warn-name-shadowing #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TypeOperators #-}
+{-# OPTIONS_GHC -fno-warn-name-shadowing #-}
 
 module Server.Post where
 
-import Control.Monad.IO.Class
-import Database.Persist
-import Data.Time
-import Servant
-
 import Api.Post
 import Api.RestApi
+import Control.Monad.IO.Class
+import Data.Time
+import Database.Persist
 import qualified Model.Post as MP
+import Servant
 import Server
 import Util
 

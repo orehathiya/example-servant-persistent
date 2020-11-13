@@ -1,10 +1,10 @@
-{-# LANGUAGE KindSignatures #-}
-{-# LANGUAGE UndecidableInstances #-}
-{-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE KindSignatures #-}
+{-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module Model where
@@ -16,6 +16,7 @@ import Database.Persist.TH
 
 mkMigrate
   "migrateAll"
-  ($(persistFileWith lowerCaseSettings "config/models/report") ++
-   $(persistFileWith lowerCaseSettings "config/models/user") ++
-   $(persistFileWith lowerCaseSettings "config/models/post"))
+  ( $(persistFileWith lowerCaseSettings "config/models/report")
+      ++ $(persistFileWith lowerCaseSettings "config/models/user")
+      ++ $(persistFileWith lowerCaseSettings "config/models/post")
+  )

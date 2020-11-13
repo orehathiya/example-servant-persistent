@@ -1,14 +1,20 @@
-{-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE TypeOperators #-}
 
 module AppSpec where
 
-import Data.Text
+import Api
+import App hiding (app)
+import Config hiding (port)
 import Data.Maybe
+import Data.Text
 import Database.Persist
+import Model.Post as MP
+import Model.Report
+import Model.User
 import Network.HTTP.Client hiding (port)
 import Network.HTTP.Types.Status
 import Network.HTTP.Types.Version
@@ -17,13 +23,6 @@ import Servant.API
 import Servant.Client
 import Test.Hspec
 import Test.Mockery.Directory
-
-import Api
-import App hiding (app)
-import Config hiding (port)
-import Model.User
-import Model.Report
-import Model.Post as MP
 
 postClient :: ClientM [Entity MP.Post] :<|> ((MP.Post -> ClientM (Maybe PostId)) :<|> (Key MP.Post -> ClientM (Entity MP.Post) :<|> ((MP.Post -> ClientM NoContent) :<|> ClientM NoContent)))
 reportClient :: ClientM [Entity Report]
@@ -43,7 +42,7 @@ spec =
     describe "/user/get" $
       it "throw Exception for non-existing users" $ \port -> do
         Left (FailureResponse _ (Response rstatus _ rversion rbody)) <- try port (userGet "foo")
-        rstatus  `shouldBe` notFound404
+        rstatus `shouldBe` notFound404
         rversion `shouldBe` http11
         rbody `shouldBe` "(╯°□°）╯︵ ┻━┻)."
     describe "/user/add" $ do
@@ -81,20 +80,20 @@ spec =
         -- get
         let getC :<|> updateC :<|> deleteC = withIdClient postId
         Right (Entity _ resPost) <- try port getC
-        title resPost  `shouldBe` title post
-        body resPost  `shouldBe` body post
+        title resPost `shouldBe` title post
+        body resPost `shouldBe` body post
 
         -- update
         let newPost = Post "title2" "body2" MP.dummyTime
         _ <- try port $ updateC newPost
         Right (Entity _ resNewPost) <- try port getC
-        title resNewPost  `shouldBe` title newPost
-        body resNewPost  `shouldBe` body newPost
+        title resNewPost `shouldBe` title newPost
+        body resNewPost `shouldBe` body newPost
 
         -- delete
         _ <- try port deleteC
         Left (FailureResponse _ (Response rstatus _ rversion rbody)) <- try port getC
-        rstatus  `shouldBe` notFound404
+        rstatus `shouldBe` notFound404
         rversion `shouldBe` http11
         rbody `shouldBe` "(╯°□°）╯︵ ┻━┻)."
 

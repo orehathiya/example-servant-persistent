@@ -1,9 +1,8 @@
 module Server where
 
-import Servant
-
 import Control.Monad.Trans.Reader (ReaderT)
 import Environment
+import Servant
 
 type AppHandler = ReaderT Environment Handler
 

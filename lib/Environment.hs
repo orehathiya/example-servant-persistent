@@ -4,6 +4,7 @@ import Config
 import Database.Persist.Sql
 
 data Environment = Environment
-  { pool :: ConnectionPool
-  , config :: Config
-  } deriving (Show)
+  { pool :: ConnectionPool,
+    config :: Config
+  }
+  deriving (Show)

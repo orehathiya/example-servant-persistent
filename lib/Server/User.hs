@@ -1,15 +1,13 @@
-{-# OPTIONS_GHC -fno-warn-name-shadowing #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TypeOperators #-}
+{-# OPTIONS_GHC -fno-warn-name-shadowing #-}
 
 module Server.User where
 
+import Api.User
 import Data.Text
 import Database.Persist
-import Servant
-
-import Api.User
 import Model.User
+import Servant
 import Server
 import Util
 

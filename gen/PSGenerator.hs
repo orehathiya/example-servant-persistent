@@ -1,29 +1,28 @@
-{-# LANGUAGE UndecidableInstances #-}
-{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE TypeInType #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE StandaloneDeriving #-}
+{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE TypeInType #-}
+{-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module Main where
 
+import Api
 import Data.Proxy
 import Database.Persist.Types
 import GHC.Generics
 import Language.PureScript.Bridge
-import Language.PureScript.Bridge.TypeParameters
 import Language.PureScript.Bridge.PSTypes (psString)
-import Servant.PureScript
-
-import Api
+import Language.PureScript.Bridge.TypeParameters
+import Model.Post
 import Model.Report
 import Model.User
-import Model.Post
+import Servant.PureScript
 
 utcTimeBridge :: BridgePart
 utcTimeBridge = typeName ^== "UTCTime" >> return psString
@@ -39,8 +38,8 @@ myBridgeProxy = Proxy
 instance HasBridge MyBridge where
   languageBridge _ = buildBridge myBridge
 
-newtype MyKey a =
-  Key Int
+newtype MyKey a
+  = Key Int
   deriving (Generic)
 
 instance Generic (Key A) where
@@ -52,11 +51,11 @@ deriving instance Generic A
 
 myTypes :: [SumType 'Haskell]
 myTypes =
-  [ mkSumType (Proxy :: Proxy (Entity A))
-  , mkSumType (Proxy :: Proxy (Key A))
-  , mkSumType (Proxy :: Proxy User)
-  , mkSumType (Proxy :: Proxy Report)
-  , mkSumType (Proxy :: Proxy Post)
+  [ mkSumType (Proxy :: Proxy (Entity A)),
+    mkSumType (Proxy :: Proxy (Key A)),
+    mkSumType (Proxy :: Proxy User),
+    mkSumType (Proxy :: Proxy Report),
+    mkSumType (Proxy :: Proxy Post)
   ]
 
 main :: IO ()

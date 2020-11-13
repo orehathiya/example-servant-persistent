@@ -1,16 +1,16 @@
-{-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE EmptyDataDecls #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE UndecidableInstances #-}
 
 module Model.Post where
@@ -23,30 +23,32 @@ import Database.Persist.Quasi
 import Database.Persist.Sql
 import Database.Persist.TH
 import GHC.Generics
-import Model.Schema
-       (defaultKeyDeclareNamedSchema, defaultEntityDeclareNamedSchema,
-        defaultKeyToParamSchema)
 import Model.Json
+import Model.Schema
+  ( defaultEntityDeclareNamedSchema,
+    defaultKeyDeclareNamedSchema,
+    defaultKeyToParamSchema,
+  )
 import Servant.Docs
 
 mkPersist
   sqlSettings
-  { mpsPrefixFields = False
-  , mpsEntityJSON =
-      Just
-        EntityJSON
-        { entityToJSON = 'myKeyValueEntityToJSON
-        , entityFromJSON = 'myKeyValueEntityFromJSON
-        }
-  }
+    { mpsPrefixFields = False,
+      mpsEntityJSON =
+        Just
+          EntityJSON
+            { entityToJSON = 'myKeyValueEntityToJSON,
+              entityFromJSON = 'myKeyValueEntityFromJSON
+            }
+    }
   $(persistFileWith lowerCaseSettings "config/models/post")
 
 instance ToSample Post where
   toSamples _ =
     samples
-      [ Post "title1" "body1" dummyTime
-      , Post "title2" "body2" dummyTime
-      , Post "title3" "body3" dummyTime
+      [ Post "title1" "body1" dummyTime,
+        Post "title2" "body2" dummyTime,
+        Post "title3" "body3" dummyTime
       ]
 
 instance ToSchema Post
@@ -63,9 +65,9 @@ instance ToParamSchema PostId where
 instance ToSample (Entity Post) where
   toSamples _ =
     samples
-      [ Entity (PostKey 1) (Post "title1" "body1" dummyTime)
-      , Entity (PostKey 2) (Post "title2" "body2" dummyTime)
-      , Entity (PostKey 3) (Post "title3" "body3" dummyTime)
+      [ Entity (PostKey 1) (Post "title1" "body1" dummyTime),
+        Entity (PostKey 2) (Post "title2" "body2" dummyTime),
+        Entity (PostKey 3) (Post "title3" "body3" dummyTime)
       ]
 
 instance ToSchema (Entity Post) where

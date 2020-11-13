@@ -1,7 +1,7 @@
-{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
@@ -9,10 +9,9 @@ module Api.User where
 
 import Data.Text
 import Database.Persist
+import Model.User
 import Servant
 import Servant.Docs
-
-import Model.User
 
 type UsersApi = UserAdd :<|> UserGet
 

@@ -3,10 +3,9 @@
 
 module Api.Report where
 
-import Servant.API
 import Database.Persist
-
 import Model.Report
+import Servant.API
 
 type ReportsApi = ReportGet
 

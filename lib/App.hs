@@ -1,24 +1,22 @@
-{-# LANGUAGE TypeOperators #-}
 {-# OPTIONS_GHC -fno-warn-name-shadowing #-}
 
 module App where
 
+import Api
+import Config
 import Control.Monad.Logger (runStderrLoggingT)
 import Control.Monad.Trans.Reader (runReaderT)
 import Data.String.Conversions
 import Database.Persist.Sql
 import Database.Persist.Sqlite
+import Environment
+import Model
 import Network.Wai
 import Servant
-
-import Api
-import Model
 import Server
+import Server.Post
 import Server.Report
 import Server.User
-import Server.Post
-import Config
-import Environment
 
 app :: Environment -> Application
 app env = serve api $ appToServer env

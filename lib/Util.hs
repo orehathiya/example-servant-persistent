@@ -1,17 +1,16 @@
-{-# OPTIONS_GHC -fno-warn-name-shadowing #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# OPTIONS_GHC -fno-warn-name-shadowing #-}
 
 module Util where
 
-import Database.Persist.Sql
+import Control.Monad.Reader (MonadIO, MonadReader, asks, liftIO)
 import Control.Monad.Trans.Resource (ResourceT, runResourceT)
-import Control.Monad.Reader (liftIO, asks, MonadIO, MonadReader)
-
+import Database.Persist.Sql
 import Environment
 
 type SqlPersistM' = SqlPersistT (ResourceT IO)
 
 runSql :: (MonadReader Environment m, MonadIO m) => SqlPersistM' b -> m b
 runSql query = do
-    pool <- asks pool
-    liftIO $ runResourceT $ runSqlPool query pool
+  pool <- asks pool
+  liftIO $ runResourceT $ runSqlPool query pool

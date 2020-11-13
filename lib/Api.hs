@@ -4,12 +4,11 @@
 
 module Api where
 
-import Data.Proxy
-import Servant.API
-
+import Api.Post
 import Api.Report
 import Api.User
-import Api.Post
+import Data.Proxy
+import Servant.API
 
 type Api = UsersApi :<|> ReportsApi :<|> PostsApi
 
