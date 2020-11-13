@@ -10,5 +10,4 @@ doc.md
 *.sqlite3*
 *.keter
 TAGS
-*.cabal
 swagger.json

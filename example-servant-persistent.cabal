@@ -1,0 +1,312 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: b56382726ee07e5169add9ddf95e13dafc98305a3e14b2aae997e368bcf29b34
+
+name:           example-servant-persistent
+version:        0.1.0.0
+synopsis:       example with persistent and servant
+description:    Simple example to illustrate how to use persistent and servant in combination.
+category:       Web
+author:         orehathiya
+maintainer:     merrynewyear6593@gmail.com
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+
+executable example-servant-persistent
+  main-is: Main.hs
+  other-modules:
+      Api
+      Api.Post
+      Api.Report
+      Api.RestApi
+      Api.User
+      App
+      Config
+      Environment
+      Model
+      Model.Json
+      Model.Post
+      Model.Report
+      Model.Schema
+      Model.User
+      Server
+      Server.Post
+      Server.Report
+      Server.User
+      Util
+      Paths_example_servant_persistent
+  hs-source-dirs:
+      lib
+      src
+  ghc-options: -Wall
+  build-depends:
+      aeson
+    , base >=4.8 && <5
+    , basement
+    , bytestring
+    , dhall
+    , http-types
+    , lens
+    , monad-logger
+    , mtl
+    , persistent
+    , persistent-sqlite
+    , persistent-template
+    , resourcet
+    , servant
+    , servant-client
+    , servant-docs
+    , servant-server
+    , string-conversions
+    , swagger2
+    , text
+    , time
+    , transformers
+    , wai
+    , wai-cors
+    , warp
+    , yaml
+  default-language: Haskell2010
+
+executable example-servant-persistent-doc
+  main-is: Doc.hs
+  other-modules:
+      Api
+      Api.Post
+      Api.Report
+      Api.RestApi
+      Api.User
+      App
+      Config
+      Environment
+      Model
+      Model.Json
+      Model.Post
+      Model.Report
+      Model.Schema
+      Model.User
+      Server
+      Server.Post
+      Server.Report
+      Server.User
+      Util
+      Paths_example_servant_persistent
+  hs-source-dirs:
+      lib
+      doc
+  ghc-options: -Wall
+  build-depends:
+      aeson
+    , aeson-pretty
+    , base >=4.8 && <5
+    , basement
+    , bytestring
+    , dhall
+    , http-types
+    , lens
+    , monad-logger
+    , mtl
+    , persistent
+    , persistent-sqlite
+    , persistent-template
+    , resourcet
+    , servant
+    , servant-client
+    , servant-docs
+    , servant-server
+    , string-conversions
+    , swagger2
+    , text
+    , time
+    , transformers
+    , wai
+    , warp
+    , yaml
+  default-language: Haskell2010
+
+executable example-servant-persistent-swagger
+  main-is: Swagger.hs
+  other-modules:
+      Api
+      Api.Post
+      Api.Report
+      Api.RestApi
+      Api.User
+      App
+      Config
+      Environment
+      Model
+      Model.Json
+      Model.Post
+      Model.Report
+      Model.Schema
+      Model.User
+      Server
+      Server.Post
+      Server.Report
+      Server.User
+      Util
+      Paths_example_servant_persistent
+  hs-source-dirs:
+      lib
+      swagger
+  ghc-options: -Wall
+  build-depends:
+      aeson
+    , aeson-pretty
+    , base >=4.8 && <5
+    , basement
+    , bytestring
+    , dhall
+    , http-types
+    , lens
+    , monad-logger
+    , mtl
+    , persistent
+    , persistent-sqlite
+    , persistent-template
+    , resourcet
+    , servant
+    , servant-client
+    , servant-docs
+    , servant-server
+    , servant-swagger
+    , string-conversions
+    , swagger2
+    , text
+    , time
+    , transformers
+    , wai
+    , warp
+    , yaml
+  default-language: Haskell2010
+
+executable psGenerator
+  main-is: PSGenerator.hs
+  other-modules:
+      Api
+      Api.Post
+      Api.Report
+      Api.RestApi
+      Api.User
+      App
+      Config
+      Environment
+      Model
+      Model.Json
+      Model.Post
+      Model.Report
+      Model.Schema
+      Model.User
+      Server
+      Server.Post
+      Server.Report
+      Server.User
+      Util
+      Paths_example_servant_persistent
+  hs-source-dirs:
+      lib
+      gen
+  ghc-options: -Wall
+  build-depends:
+      aeson
+    , base >=4.8 && <5
+    , basement
+    , bytestring
+    , containers
+    , dhall
+    , filepath
+    , http-api-data
+    , http-types
+    , lens
+    , mainland-pretty
+    , monad-logger
+    , mtl
+    , persistent
+    , persistent-sqlite
+    , persistent-template
+    , purescript-bridge
+    , resourcet
+    , servant
+    , servant-client
+    , servant-docs
+    , servant-foreign
+    , servant-purescript
+    , servant-server
+    , servant-subscriber
+    , string-conversions
+    , swagger2
+    , text
+    , time
+    , transformers
+    , wai
+    , warp
+    , yaml
+  default-language: Haskell2010
+
+test-suite spec
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Api
+      Api.Post
+      Api.Report
+      Api.RestApi
+      Api.User
+      App
+      Config
+      Environment
+      Model
+      Model.Json
+      Model.Post
+      Model.Report
+      Model.Schema
+      Model.User
+      Server
+      Server.Post
+      Server.Report
+      Server.User
+      Util
+      AppSpec
+      Paths_example_servant_persistent
+  hs-source-dirs:
+      lib
+      test
+  ghc-options: -Wall
+  build-depends:
+      aeson
+    , base >=4.8 && <5
+    , basement
+    , bytestring
+    , dhall
+    , exceptions
+    , hspec
+    , http-client
+    , http-media
+    , http-types
+    , lens
+    , mockery
+    , monad-logger
+    , mtl
+    , persistent
+    , persistent-sqlite
+    , persistent-template
+    , resourcet
+    , servant
+    , servant-client
+    , servant-docs
+    , servant-server
+    , string-conversions
+    , swagger2
+    , text
+    , time
+    , transformers
+    , wai
+    , warp
+    , yaml
+  default-language: Haskell2010
