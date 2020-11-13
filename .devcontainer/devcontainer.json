@@ -3,6 +3,7 @@
 	"image": "haskell:8.8.4",
 	"extensions": [
 		"haskell.haskell",
-		"editorconfig.editorconfig"
+		"editorconfig.editorconfig",
+		"redhat.vscode-yaml"
 	]
 }
