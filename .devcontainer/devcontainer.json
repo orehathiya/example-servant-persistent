@@ -1,9 +1,17 @@
 {
 	"name": "Existing Dockerfile",
-	// Sets the run context to one level up instead of the .devcontainer folder.
-	"context": "..",
-	// Update the 'dockerFile' property if you aren't using the standard 'Dockerfile' filename.
-	"dockerFile": "../Dockerfile",
+	"build": {
+		// Sets the run context to one level up instead of the .devcontainer folder.
+		"context": "..",
+		// Update the 'dockerFile' property if you aren't using the standard 'Dockerfile' filename.
+		"dockerfile": "../Dockerfile",
+		"target": "build"
+	},
+	"mounts": [
+		"target=/opt/build/.stack-work,type=volume",
+	],
+	"workspaceMount": "source=${localWorkspaceFolder},target=/opt/build,type=bind",
+	"workspaceFolder": "/opt/build",
 	// Set *default* container specific settings.json values on container create.
 	"settings": {
 		// "terminal.integrated.shell.linux": null
